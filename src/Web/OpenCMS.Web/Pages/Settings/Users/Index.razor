@@ -1,0 +1,72 @@
+﻿@page "/settings/users"
+@inject IUserService _userService
+@inject IDialogService DialogService
+<div class="card">
+    <div class="card-header">
+        <h5>Users</h5>
+    </div>
+    <div class="card-body">
+        <MudTable Items="dataSource" Loading="isLoading" Dense="true" Hover="true" LoadingProgressColor="Color.Info">
+            <HeaderContent>
+                <MudTh Style="width: 10%;text-align:center">
+                    <MudIconButton Icon="@Icons.Filled.LibraryAdd"
+                                   OnClick="@(()=>{ShowAddEditDialog(null);})"></MudIconButton>
+                </MudTh>
+                <MudTh>Name</MudTh>
+                <MudTh>UserName</MudTh>
+                <MudTh>Email</MudTh>
+
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>
+                    <MudIconButton Icon="@Icons.Filled.Build" @onclick="@(()=>ShowAddEditDialog(context))"></MudIconButton>
+                    <MudIconButton Icon="@Icons.Filled.DeleteForever"></MudIconButton>
+                </MudTd>
+                <MudTd>@context.FirstName @context.MiddleName @context.LastName</MudTd>
+                <MudTd>@context.UserName</MudTd>
+                <MudTd>@context.Email</MudTd>
+            </RowTemplate>
+        </MudTable>
+    </div>
+</div>
+<AddEditUserDialog model="UserModel" Close="Close" visible="showDialog"></AddEditUserDialog>
+
+@code {
+    private List<UserModel> dataSource;
+    private bool isLoading = true;
+    private bool showDialog { get; set; }
+    private UserModel UserModel { get; set; } = new();
+    protected override async Task OnInitializedAsync()
+    {
+
+        await GetAll();
+    }
+
+    private void ShowAddEditDialog(UserModel model)
+    {
+        if (model != null)
+        {
+            this.UserModel = model;
+            showDialog = true;
+            return;
+        }
+        this.UserModel = new();
+        showDialog = true;
+
+
+    }
+
+    private async Task Close(object e)
+    {
+        showDialog = false;
+        await GetAll();
+    }
+
+    private async Task GetAll()
+    {
+        isLoading = true;
+        var list = await _userService.GetAll();
+        dataSource = list.Items;
+        isLoading = false;
+    }
+}

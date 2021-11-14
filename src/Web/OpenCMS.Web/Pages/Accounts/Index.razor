@@ -1,0 +1,89 @@
+﻿@page "/chart-of-accounts"
+@attribute [Authorize]
+@inject IAccountsService _accountsService
+<div class="card">
+    <div class="card-header">
+        <h5>Chart of Accounts</h5>
+    </div>
+    <div class="card-body">
+        <MudTabs Elevation="4" Rounded="true" >
+       @foreach (var i in new List<string> {""})
+       {
+           <MudTabPanel Text="All Accounts" />
+           <MudTabPanel Text="Asset" />
+           <MudTabPanel Text="Liability" />
+           <MudTabPanel Text="Equity" />
+           <MudTabPanel Text="Income" />
+           <MudTabPanel Text="Cost of Sales" />
+           <MudTabPanel Text="Expense" />
+           <MudTabPanel Text="Other Income" />
+           <MudTabPanel Text="Other Expense" />
+       }
+        </MudTabs>
+        <MudTable Items="datasource" Hover="true" Dense="true" Striped="true" Breakpoint="Breakpoint.Sm" Loading="@isLoading" LoadingProgressColor="Color.Info">
+            <HeaderContent>
+                <MudTh Style="width: 10%;text-align:center">
+                    <MudIconButton Icon="@Icons.Filled.LibraryAdd"></MudIconButton>
+                </MudTh>
+                <MudTh>Account Name</MudTh>
+                <MudTh>Account Number</MudTh>
+                <MudTh>Opening Balance</MudTh>
+                <MudTh>Current Balance</MudTh>
+
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>
+                    <MudIconButton Icon="@Icons.Filled.Build"></MudIconButton>
+                    <MudIconButton Icon="@Icons.Filled.DeleteForever"></MudIconButton>
+                </MudTd>
+                <MudTd DataLabel="Nr" Style="@(setStyle(context,true))">@context.AccountName</MudTd>
+                <MudTd DataLabel="Sign" Style="@(setStyle(context,false))">@context.AccountNumber</MudTd>
+                <MudTd DataLabel="Name" Style="@(setStyle(context,false))">@context.OpeningBalance</MudTd>
+                <MudTd DataLabel="Name" Style="@(setStyle(context,false))">@context.CurrentBalance</MudTd>
+            </RowTemplate>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+    </div>
+</div>
+
+
+
+
+
+@code {
+
+    private bool isLoading = true;
+    private List<AccountsModel> datasource = new();
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        isLoading = true;
+        datasource = await _accountsService.GetAll();
+        isLoading = false;
+        StateHasChanged();
+    }
+
+    private string setHierarchy(int hierarchy)
+    {
+        return "padding-left:" + ((hierarchy + 1) * 10) + "px";
+    }
+
+    private string setStyle(AccountsModel context, bool padded)
+    {
+        var style = new List<string>();
+        if (padded)
+        {
+            style.Add(setHierarchy(context.HierarchyLevel));
+        }
+        if (context.IsHeader)
+            style.Add("font-weight:bolder");
+        return string.Join(";", style);
+    }
+
+}

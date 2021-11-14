@@ -1,0 +1,11 @@
+﻿
+@code {
+    [Parameter]
+    public EventCallback<string> SignIn { get; set; }
+
+    private async Task OnSignIn()
+    {
+        await this.SignIn.InvokeAsync("test");
+    }
+
+}

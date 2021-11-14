@@ -1,0 +1,50 @@
+﻿@inject IUserService _userService
+<MudDialog @bind-IsVisible="visible" Options="dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />
+            @(string.IsNullOrEmpty(model?.FirstName)? "Add Edit User": "Edit " + model.UserName)
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudForm Model="model" @bind-IsValid="@success">
+            <MudTextField Label="First Name" Class="mt-3"
+                          @bind-Value="model.FirstName" For="@(() => model.FirstName)" T="string" Required="true" RequiredError="First Name is Required"/>
+            <MudTextField Label="Middle Name" Class="mt-3"
+                          @bind-Value="model.MiddleName" For="@(() => model.MiddleName)" T="string"  />
+            <MudTextField Label="Last Name" Class="mt-3"
+                          @bind-Value="model.LastName" For="@(() => model.LastName)"  T="string" />
+            <MudTextField Label="Username" HelperText="Max. 8 characters"
+                          @bind-Value="model.UserName" For="@(() => model.UserName)" />
+            <MudTextField Label="Email" Class="mt-3"
+                          @bind-Value="model.Email" For="@(() => model.Email)"Required="true"/>
+            <MudTextField Label="Password" HelperText="Choose a strong password" Class="mt-3"
+                          @bind-Value="model.Password" For="@(() => model.Password)" InputType="InputType.Password" Required="true"/>
+
+
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+
+        <MudButton Color="Color.Primary" OnClick="Save" Disabled="!success">Save</MudButton>
+        <MudButton Color="Color.Default" OnClick="closeDialog">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
+@code{
+    bool success=false;
+    [Parameter] public UserModel model { get; set; }
+    private DialogOptions dialogOptions = new DialogOptions() { FullWidth = true, MaxWidth = MaxWidth.Medium };
+    [Parameter] public EventCallback<string> Close { get; set; }
+    [Parameter] public bool visible { get; set; }
+    private void closeDialog()
+    {
+        Close.InvokeAsync("sdf");
+    }
+
+    private async Task Save()
+    {
+        await _userService.CreateUser(model);
+        await Close.InvokeAsync("sdf");
+    }
+
+}

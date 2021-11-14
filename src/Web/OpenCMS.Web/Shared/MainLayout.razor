@@ -1,0 +1,59 @@
+﻿
+@inherits LayoutComponentBase
+@inject NavigationManager _navigationManager
+@inject IAuthenticationService _authenticationService
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+
+<MudLayout>
+    <MudAppBar Elevation="50">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        <MudText Typo="Typo.h5">Open ERP</MudText>
+        <MudSpacer />
+        <MudIconButton Icon="@Icons.Filled.Logout" Color="Color.Inherit"  OnClick="Logout"/>
+    </MudAppBar>
+    <MudDrawer @bind-Open="@_drawerOpen" Fixed="true" Variant="DrawerVariant.Responsive" Elevation="20" Color="Color.Default" >
+        <NavMenu />
+    </MudDrawer>
+    <MudMainContent >
+        <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
+            <MudGrid>
+                <MudItem xs="6"></MudItem>
+                <MudItem xs="6">
+                    <MudBreadcrumbs Items="_items" Style="float:right"></MudBreadcrumbs>
+                </MudItem>
+                </MudGrid>
+            <MudGrid>
+                <MudItem xl="12" xs="12">
+                    @Body
+                </MudItem>
+            </MudGrid>
+                
+        </MudContainer>
+        
+    </MudMainContent>
+</MudLayout>
+@code {
+    bool _drawerOpen = true;
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+    protected override void OnAfterRender(bool firstRender)
+    {
+
+        base.OnAfterRender(firstRender);
+    }
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Dashboard", href: "#"),
+    };
+
+    private async Task Logout()
+    {
+        await _authenticationService.Logout();
+    }
+}

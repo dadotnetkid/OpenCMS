@@ -1,0 +1,93 @@
+﻿@page "/card-files"
+@attribute [Authorize]
+@inject IDialogService _dialogService
+@inject ICardFilesService _cardFileService
+@inject NavigationManager _navigationManager
+
+<div class="card">
+    <div class="card-header">
+        <h5>Card Files</h5>
+    </div>
+    <div class="card-body">
+        <MudTabs Elevation="4" Rounded="true">
+            <MudTabPanel Text="Customer" OnClick="@(()=>Refresh(CardFileType.Customer))" />
+            <MudTabPanel Text="Supplier" OnClick="@(()=>Refresh(CardFileType.Supplier))" />
+        </MudTabs>
+        <MudTable Items="datasource" Hover="true" Dense="true" Striped="true" Breakpoint="Breakpoint.Sm" Loading="@isLoading" LoadingProgressColor="Color.Info">
+            <HeaderContent>
+                <MudTh Style="width: 10%;text-align:center">
+                    <MudIconButton Icon="@Icons.Filled.LibraryAdd"></MudIconButton>
+                </MudTh>
+                <MudTh>FirstName</MudTh>
+                <MudTh>MiddleName</MudTh>
+                <MudTh>LastName</MudTh>
+                <MudTh>AddressLine1</MudTh>
+                <MudTh>AddressLine2</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>
+                    <MudIconButton Icon="@Icons.Filled.Build" @onclick="@(() => { OnCardFileEdit(context); })"></MudIconButton>
+                    <MudIconButton Icon="@Icons.Filled.DeleteForever" @onclick="@(async() => { await onCardFileDelete(context); })"></MudIconButton>
+                </MudTd>
+                <MudTd DataLabel="Nr">@context.FirstName</MudTd>
+                <MudTd DataLabel="Sign">@context.MiddleName</MudTd>
+                <MudTd DataLabel="Name">@context.LastName</MudTd>
+                <MudTd DataLabel="Name">@context.AddressLine1</MudTd>
+                <MudTd DataLabel="Name">@context.AddressLine2</MudTd>
+
+            </RowTemplate>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+    </div>
+</div>
+
+
+
+
+
+@code {
+    bool isLoading = true;
+    CardFileType cardFileType = CardFileType.Customer;
+
+    private List<CardFilesModel> datasource = new();
+    protected override async Task OnInitializedAsync()
+    {
+        await Refresh(cardFileType);
+
+        Console.WriteLine(datasource);
+        StateHasChanged();
+    }
+    private async Task onCardFileDelete(CardFilesModel item)
+    {
+        var res = await _dialogService.ShowMessageBox(item.FirstName + " " + item.LastName, $"Do you want to this card file item", yesText: "Delete", cancelText: "Cancel");
+        if (res == true)
+        {
+            await _cardFileService.Delete(item);
+            await Refresh(cardFileType);
+        }
+
+        StateHasChanged();
+    }
+
+    private void OnCardFileEdit(CardFilesModel item)
+    {
+        _navigationManager.NavigateTo($"/customer/{item.Id}");
+    }
+
+    private void OnCardFileAdd()
+    {
+        Console.WriteLine("new");
+    }
+
+    private async Task Refresh(CardFileType _cardFileType)
+    {
+        isLoading = true;
+        this.cardFileType = _cardFileType;
+        var result = await _cardFileService.GetAll(_cardFileType);
+        datasource = result.Data.Items.Where(x => x.CardFileType == cardFileType).ToList();
+        isLoading = false;
+    }
+
+}

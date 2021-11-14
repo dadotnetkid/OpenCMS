@@ -1,0 +1,65 @@
+﻿@page "/agents"
+
+
+@inject IAgentsService _agentService
+
+
+<div class="card">
+    <div class="card-header">
+        <h5>Customers</h5>
+    </div>
+    <div class="card-body">
+        <MudTable Items="datasource" Hover="true" Dense="true" Breakpoint="Breakpoint.Sm" Loading="@isLoading" LoadingProgressColor="Color.Info">
+            <HeaderContent>
+                <MudTh>
+                    <MudIconButton Icon="@Icons.Filled.LibraryAdd"></MudIconButton>
+                </MudTh>
+                <MudTh>FirstName</MudTh>
+                <MudTh>MiddleName</MudTh>
+                <MudTh>LastName</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd >
+                    <MudIconButton Icon="@Icons.Filled.Build" @onclick="@(() => { onEditAgent(context.Id);})"></MudIconButton>
+                    <MudIconButton Icon="@Icons.Filled.DeleteForever"></MudIconButton>
+                </MudTd>
+                <MudTd DataLabel="Nr">@context.FirstName</MudTd>
+                <MudTd DataLabel="Sign">@context.MiddleName</MudTd>
+                <MudTd DataLabel="Name">@context.LastName</MudTd>
+
+            </RowTemplate>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+    </div>
+</div>
+
+
+
+
+
+
+@code {
+    bool isLoading = true;
+
+
+    private List<AgentsModel> datasource = new();
+    protected override async Task OnInitializedAsync()
+    {
+        datasource = await _agentService.GetAll();
+        isLoading = false;
+        StateHasChanged();
+    }
+    private void onDeleteAgent(int id)
+    {
+        Console.WriteLine(id);
+
+    }
+
+    private void onEditAgent(int id)
+    {
+        Console.WriteLine(id);
+    }
+
+}

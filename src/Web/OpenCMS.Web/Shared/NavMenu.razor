@@ -1,0 +1,38 @@
+﻿@using OpenCMS.Web.Application.Interfaces
+@inject IUserService _userService
+@inject IAuthenticationService _authenticationService
+<MudNavMenu>
+    <MudText Typo="Typo.h5" Class="px-4">Open ERP</MudText>
+    <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">@_userService.GetUserName()</MudText>
+    <MudDivider Class="my-2" />
+    <MudNavLink Icon="@Icons.Filled.Dashboard" Href="/" Match="NavLinkMatch.All">Dashboard</MudNavLink>
+
+    <MudNavLink Icon="@Icons.Filled.BarChart" Href="/chart-of-accounts">Chart of Accounts</MudNavLink>
+    <MudNavLink Icon="@Icons.Filled.PersonSearch" Href="/card-files">Card Files</MudNavLink>
+    <MudNavLink Icon="@Icons.Filled.PointOfSale" Href="/sales">Sales</MudNavLink>
+    <MudNavLink Icon="@Icons.Filled.Inventory" Href="/inventory">Inventory</MudNavLink>
+    <MudNavGroup Icon="@Icons.Filled.Settings" Title="Settings">
+        <MudNavLink Icon="@Icons.Filled.AccountCircle" Href="/settings/users">Users</MudNavLink>
+
+        <MudNavLink Icon="@Icons.Filled.Web" Href="/settings/web-hooks">WebHooks</MudNavLink>
+        <MudNavLink Href="/security">Security</MudNavLink>
+    </MudNavGroup>
+    <MudNavLink Icon="@Icons.Filled.Info" Href="/about">About</MudNavLink>
+</MudNavMenu>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private List<string> roles = new List<string>();
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    private async Task logout()
+    {
+       await _authenticationService.Logout();
+    }
+
+}
