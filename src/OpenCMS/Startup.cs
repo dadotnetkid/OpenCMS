@@ -99,10 +99,10 @@ namespace OpenCMS
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-           /*     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "OpenCMS v1"));*/
+                
             }
-
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "OpenCMS v1"));
             app.UseCors(option =>
             {
                 option.AllowAnyOrigin()
