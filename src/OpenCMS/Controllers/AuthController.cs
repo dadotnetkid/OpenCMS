@@ -10,7 +10,9 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using OpenCMS.Application.Interfaces.Services;
@@ -26,15 +28,22 @@ namespace OpenCMS.Controllers
     {
         private readonly IAuthenticationService _authenticationService;
         private readonly IUserService _userService;
+        private readonly IWebHostEnvironment _env;
+        private readonly IOptions<LoginModel> _mockCredentials;
 
         private JwtSettings _jwtSettings;
 
         public AuthController(IOptions<JwtSettings> jwtSettings,
             IAuthenticationService authenticationService,
-            IUserService userService)
+            IUserService userService,
+            IWebHostEnvironment env,
+            IOptions<LoginModel> mockCredentials
+            )
         {
             _authenticationService = authenticationService;
             _userService = userService;
+            _env = env;
+            _mockCredentials = mockCredentials;
 
             _jwtSettings = jwtSettings.Value;
         }
@@ -42,6 +51,11 @@ namespace OpenCMS.Controllers
         [HttpPost(".auth")]
         public IActionResult Authenticate([FromBody] LoginModel item)
         {
+            if (_env.IsDevelopment())
+            {
+                item.UserName = _mockCredentials.Value.UserName;
+                item.Password = _mockCredentials.Value.Password;
+            }
             var res = _authenticationService.Verify(item.UserName, item.Password);
             if (res.Succeeded)
             {

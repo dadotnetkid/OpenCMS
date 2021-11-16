@@ -1,0 +1,49 @@
+﻿@page "/catalogs"
+@inject ICatalogsService _catalogService
+<div class="card">
+    <div class="card-header">
+        <h5>Users</h5>
+    </div>
+    <div class="card-body">
+        <MudTable Items="dataSource" Loading="isLoading" Dense="true" Hover="true" LoadingProgressColor="Color.Info">
+            <HeaderContent>
+                <MudTh Style="width: 10%;text-align:center">
+                </MudTh>
+                <MudTh>Item Number</MudTh>
+                <MudTh>Name</MudTh>
+                <MudTh>I Sell This Item</MudTh>
+                <MudTh>I Inventory This Item</MudTh>
+                <MudTh>I Buy This Item</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>
+                    <MudIconButton Icon="@Icons.Filled.Build"></MudIconButton>
+                    <MudIconButton Icon="@Icons.Filled.DeleteForever"></MudIconButton>
+                </MudTd>
+                <MudTd>@context.ItemNumber</MudTd>
+                <MudTd>@context.Name</MudTd>
+                <MudTd>
+                    <MudCheckBox Checked="context.ISellThisItem" Disabled="true" />
+                </MudTd>
+                <MudTd>
+                    <MudCheckBox Checked="context.IInventoryThisItem" Disabled="true" />
+                </MudTd>
+                <MudTd>
+                    <MudCheckBox Checked="context.IBuyThisItem" Disabled="true" />
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    </div>
+</div>
+@code{
+    bool isLoading = true;
+    List<CatalogModel> dataSource = new();
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+        var list =await _catalogService.GetAll();
+        dataSource = list.Items;
+        isLoading = false;
+
+    }
+}

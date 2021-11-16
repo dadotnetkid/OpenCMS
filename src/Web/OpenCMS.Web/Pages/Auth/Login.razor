@@ -8,7 +8,7 @@
 
 <EditForm Model="loginModel" OnValidSubmit="submitForm">
     <div class="input-group mb-2">
-        <MudTextField Label="Password" Variant="Variant.Filled" @bind-Value="loginModel.Username" InputType="InputType.Text">
+        <MudTextField Label="Username" Variant="Variant.Filled" @bind-Value="loginModel.Username" InputType="InputType.Text">
 
         </MudTextField>
     </div>
@@ -23,14 +23,13 @@
 
         <!-- /.col -->
         <div class="col-12">
-            <MudButton Disabled="isLoading" Variant="Variant.Filled" DisableElevation="false" FullWidth="true" Color="Color.Primary" ButtonType="ButtonType.Submit">
+            <MudButton Disabled="isLoading" Variant="Variant.Filled" DisableElevation="false"  FullWidth="true" Color="Color.Primary" ButtonType="ButtonType.Submit">
 
                 @if (isLoading)
                 {
                     <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate="true" />
                 }
-
-                Login
+                &nbsp; Login
             </MudButton>
         </div>
     </div>

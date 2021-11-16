@@ -27,6 +27,8 @@ namespace OpenCMS.Web
             builder.Services.AddScoped<IAgentsService, AgentsService>();
             builder.Services.AddScoped<ICardFilesService, CardFilesService>();
             builder.Services.AddScoped<IAccountsService, AccountsService>();
+            builder.Services.AddScoped<ICatalogsService, CatalogsService>();
+            builder.Services.AddScoped<IOpenCMSHttpClient, OpenCMSHttpClient>();
             builder.Services.AddMudServices();
 
             builder.Services.AddHttpClient("OpenCMS", c =>

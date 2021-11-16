@@ -32,7 +32,7 @@
 <AddEditUserDialog model="UserModel" Close="Close" visible="showDialog"></AddEditUserDialog>
 
 @code {
-    private List<UserModel> dataSource;
+    private List<UserModel> dataSource = new List<UserModel>();
     private bool isLoading = true;
     private bool showDialog { get; set; }
     private UserModel UserModel { get; set; } = new();

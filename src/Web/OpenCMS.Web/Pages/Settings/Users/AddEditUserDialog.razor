@@ -1,4 +1,5 @@
-﻿@inject IUserService _userService
+﻿@using OpenCMS.Web.Infrastructure.Validators
+@inject IUserService _userService
 <MudDialog @bind-IsVisible="visible" Options="dialogOptions">
     <TitleContent>
         <MudText Typo="Typo.h6">
@@ -9,17 +10,32 @@
     <DialogContent>
         <MudForm Model="model" @bind-IsValid="@success">
             <MudTextField Label="First Name" Class="mt-3"
-                          @bind-Value="model.FirstName" For="@(() => model.FirstName)" T="string" Required="true" RequiredError="First Name is Required"/>
+                          @bind-Value="model.FirstName"
+                          For="@(() => model.FirstName)"
+                          Validation="@(modelValidator.ValidateValue)"
+                          Immediate="true" />
             <MudTextField Label="Middle Name" Class="mt-3"
-                          @bind-Value="model.MiddleName" For="@(() => model.MiddleName)" T="string"  />
+                          @bind-Value="model.MiddleName" For="@(() => model.MiddleName)"
+                          Validation="@(modelValidator.ValidateValue)"
+                          Immediate="true" />
             <MudTextField Label="Last Name" Class="mt-3"
-                          @bind-Value="model.LastName" For="@(() => model.LastName)"  T="string" />
+                          @bind-Value="model.LastName" For="@(() => model.LastName)"
+                          Validation="@(modelValidator.ValidateValue)"
+                          Immediate="true" />
             <MudTextField Label="Username" HelperText="Max. 8 characters"
-                          @bind-Value="model.UserName" For="@(() => model.UserName)" />
+                          @bind-Value="model.UserName" For="@(() => model.UserName)"
+                          Validation="@(modelValidator.ValidateValue)"
+                          Immediate="true" />
             <MudTextField Label="Email" Class="mt-3"
-                          @bind-Value="model.Email" For="@(() => model.Email)"Required="true"/>
+                          @bind-Value="model.Email" For="@(() => model.Email)"
+                          Validation="@(modelValidator.ValidateValue)"
+                          Immediate="true"
+                          InputType="InputType.Email"
+                          />
             <MudTextField Label="Password" HelperText="Choose a strong password" Class="mt-3"
-                          @bind-Value="model.Password" For="@(() => model.Password)" InputType="InputType.Password" Required="true"/>
+                          @bind-Value="model.Password" For="@(() => model.Password)" InputType="InputType.Password"
+                          Validation="@(modelValidator.ValidateValue)"
+                          Immediate="true" />
 
 
         </MudForm>
@@ -31,7 +47,8 @@
     </DialogActions>
 </MudDialog>
 @code{
-    bool success=false;
+    UserValidator modelValidator = new UserValidator();
+    bool success = false;
     [Parameter] public UserModel model { get; set; }
     private DialogOptions dialogOptions = new DialogOptions() { FullWidth = true, MaxWidth = MaxWidth.Medium };
     [Parameter] public EventCallback<string> Close { get; set; }
