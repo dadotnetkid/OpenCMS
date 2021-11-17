@@ -2,25 +2,25 @@
 @inject IUserService _userService
 @inject IAuthenticationService _authenticationService
 <MudNavMenu>
-    <MudText Typo="Typo.h5" Class="px-4">Open ERP</MudText>
-    <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">@_userService.GetUserName()</MudText>
+    <MudText Typo="Typo.h5" Class="px-4" IconColor="Color.Inherit">Open ERP</MudText>
+    <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary" IconColor="Color.Inherit">@_userService.GetUserName()</MudText>
     <MudDivider Class="my-2" />
-    <MudNavLink Icon="@Icons.Filled.Dashboard" Href="/" Match="NavLinkMatch.All">Dashboard</MudNavLink>
+    <MudNavLink Icon="@Icons.Filled.Dashboard" Href="/" Match="NavLinkMatch.All" IconColor="Color.Inherit">Dashboard</MudNavLink>
 
-    <MudNavLink Icon="@Icons.Filled.BarChart" Href="/chart-of-accounts">Chart of Accounts</MudNavLink>
-    <MudNavLink Icon="@Icons.Filled.PersonSearch" Href="/card-files">Card Files</MudNavLink>
-    <MudNavLink Icon="@Icons.Filled.PointOfSale" Href="/sales">Sales</MudNavLink>
-    <MudNavGroup Icon="@Icons.Filled.Inventory2" Title="Inventory">
-        <MudNavLink Icon="@Icons.Filled.ShoppingCart" Href="/catalogs">Catalogs</MudNavLink>
+    <MudNavLink Icon="@Icons.Filled.BarChart" Href="/chart-of-accounts" IconColor="Color.Inherit">Chart of Accounts</MudNavLink>
+    <MudNavLink Icon="@Icons.Filled.PersonSearch" Href="/card-files" IconColor="Color.Inherit">Card Files</MudNavLink>
+    <MudNavLink Icon="@Icons.Filled.PointOfSale" Href="/sales" IconColor="Color.Inherit">Sales</MudNavLink>
+    <MudNavGroup Icon="@Icons.Filled.Inventory2" Title="Inventory" IconColor="Color.Inherit">
+        <MudNavLink Icon="@Icons.Filled.ShoppingCart" Href="/catalogs" IconColor="Color.Inherit">Catalogs</MudNavLink>
 
     </MudNavGroup>
-    <MudNavGroup Icon="@Icons.Filled.Settings" Title="Settings">
-        <MudNavLink Icon="@Icons.Filled.AccountCircle" Href="/settings/users">Users</MudNavLink>
+    <MudNavGroup Icon="@Icons.Filled.Settings" Title="Settings" IconColor="Color.Inherit">
+        <MudNavLink Icon="@Icons.Filled.AccountCircle" Href="/settings/users" IconColor="Color.Inherit">Users</MudNavLink>
 
-        <MudNavLink Icon="@Icons.Filled.Web" Href="/settings/web-hooks">WebHooks</MudNavLink>
-        <MudNavLink Href="/security">Security</MudNavLink>
+        <MudNavLink Icon="@Icons.Filled.Web" Href="/settings/web-hooks" IconColor="Color.Inherit">WebHooks</MudNavLink>
+        <MudNavLink Href="/security" IconColor="Color.Inherit">Security</MudNavLink>
     </MudNavGroup>
-    <MudNavLink Icon="@Icons.Filled.Info" Href="/about">About</MudNavLink>
+    <MudNavLink Icon="@Icons.Filled.Info" Href="/about" IconColor="Color.Inherit">About</MudNavLink>
 </MudNavMenu>
 
 @code {

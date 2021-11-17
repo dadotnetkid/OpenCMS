@@ -9,33 +9,39 @@
     </TitleContent>
     <DialogContent>
         <MudForm Model="model" @bind-IsValid="@success">
-            <MudTextField Label="First Name" Class="mt-3"
-                          @bind-Value="model.FirstName"
-                          For="@(() => model.FirstName)"
-                          Validation="@(modelValidator.ValidateValue)"
-                          Immediate="true" />
-            <MudTextField Label="Middle Name" Class="mt-3"
-                          @bind-Value="model.MiddleName" For="@(() => model.MiddleName)"
-                          Validation="@(modelValidator.ValidateValue)"
-                          Immediate="true" />
-            <MudTextField Label="Last Name" Class="mt-3"
-                          @bind-Value="model.LastName" For="@(() => model.LastName)"
-                          Validation="@(modelValidator.ValidateValue)"
-                          Immediate="true" />
-            <MudTextField Label="Username" HelperText="Max. 8 characters"
-                          @bind-Value="model.UserName" For="@(() => model.UserName)"
-                          Validation="@(modelValidator.ValidateValue)"
-                          Immediate="true" />
-            <MudTextField Label="Email" Class="mt-3"
-                          @bind-Value="model.Email" For="@(() => model.Email)"
-                          Validation="@(modelValidator.ValidateValue)"
-                          Immediate="true"
-                          InputType="InputType.Email"
-                          />
-            <MudTextField Label="Password" HelperText="Choose a strong password" Class="mt-3"
-                          @bind-Value="model.Password" For="@(() => model.Password)" InputType="InputType.Password"
-                          Validation="@(modelValidator.ValidateValue)"
-                          Immediate="true" />
+            <MudGrid>
+                <MudItem xs="6">
+                    <MudTextField Label="First Name" Class="mt-3"
+                                  @bind-Value="model.FirstName"
+                                  For="@(() => model.FirstName)"
+                                  Validation="@(modelValidator.ValidateValue)"
+                                  Immediate="true" />
+                    <MudTextField Label="Middle Name" Class="mt-3"
+                                  @bind-Value="model.MiddleName" For="@(() => model.MiddleName)"
+                                  Validation="@(modelValidator.ValidateValue)"
+                                  Immediate="true" />
+                    <MudTextField Label="Last Name" Class="mt-3"
+                                  @bind-Value="model.LastName" For="@(() => model.LastName)"
+                                  Validation="@(modelValidator.ValidateValue)"
+                                  Immediate="true" />
+                    <MudTextField Label="Username" HelperText="Max. 8 characters"
+                                  @bind-Value="model.UserName" For="@(() => model.UserName)"
+                                  Validation="@(modelValidator.ValidateValue)"
+                                  Immediate="true" />
+                    <MudTextField Label="Email" Class="mt-3"
+                                  @bind-Value="model.Email" For="@(() => model.Email)"
+                                  Validation="@(modelValidator.ValidateValue)"
+                                  Immediate="true"
+                                  InputType="InputType.Email"
+                    />
+                
+                    <MudTextField Label="Password" HelperText="Choose a strong password" Class="mt-3"
+                                  @bind-Value="model.Password" For="@(() => model.Password)" InputType="InputType.Password"
+                                  Validation="@(modelValidator.ValidateValue)"
+                                  Immediate="true" />
+
+                </MudItem>
+            </MudGrid>
 
 
         </MudForm>

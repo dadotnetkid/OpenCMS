@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace OpenCMS.Domain.Entities
 {
     [Table("Catalogs")]
-    public class Catalogs:BaseEntity<int>
+    public class Catalogs : BaseEntity<int>
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -27,6 +27,9 @@ namespace OpenCMS.Domain.Entities
         public string IncomeAcount { get; set; }
         [MaxLength(128)]
         public string InventoryAccount { get; set; }
+        public decimal LastCost { get; set; }
+        public decimal SellPrice { get; set; }
+        public decimal Quantity { get; set; }
     }
 
 }

@@ -46,8 +46,7 @@ namespace OpenCMS.Controllers
                 IInventoryThisItem=item.IInventoryThisItem,
                 SalesAcount=item.SalesAccount,
                 IncomeAcount=item.IncomeAccount,
-                InventoryAccount=item.InventoryAccount
-
+                InventoryAccount=item.InventoryAccount,
             });
             return Ok(new PaginatedResponse<object>()
             {

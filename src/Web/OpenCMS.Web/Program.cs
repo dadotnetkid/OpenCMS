@@ -28,6 +28,7 @@ namespace OpenCMS.Web
             builder.Services.AddScoped<ICardFilesService, CardFilesService>();
             builder.Services.AddScoped<IAccountsService, AccountsService>();
             builder.Services.AddScoped<ICatalogsService, CatalogsService>();
+            builder.Services.AddScoped<IPdfViewerService, PdfViewerService>();
             builder.Services.AddScoped<IOpenCMSHttpClient, OpenCMSHttpClient>();
             builder.Services.AddMudServices();
 

@@ -35,5 +35,11 @@ namespace OpenCMS.Web.Infrastructure.Models
 
         [JsonPropertyName("inventoryAccount")]
         public string InventoryAccount { get; set; }
+        [JsonPropertyName("lastCost")]
+        public decimal? LastCost { get; set; }
+        [JsonPropertyName("sellPrice")]
+        public decimal? SellPrice { get; set; }
+        [JsonPropertyName("quantity")]
+        public decimal? Quantity { get; set; }
     }
 }

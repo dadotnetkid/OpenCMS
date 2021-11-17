@@ -37,6 +37,7 @@
 
   <ItemGroup>
     <Folder Include="Pages\Inventory\" />
+    <Folder Include="wwwroot\pdf-viewer\lib\ui\assets\icons\" />
   </ItemGroup>
 
 </Project>

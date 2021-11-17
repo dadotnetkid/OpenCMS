@@ -1,25 +1,30 @@
 ﻿@page "/"
 
 @attribute [Authorize]
-@inject IJSRuntime _jsRuntime
 @inject IConfiguration _configuration
-<h1>Hello, world!</h1>
+@inject IPdfViewerService _pdfViewerService
+@*<h1>Hello, world!</h1>
 
-Welcome to your new app.
+    Welcome to your new app.
 
-<SurveyPrompt Title="How is Blazor working for you?" />
-<div id="card-element">
+    <SurveyPrompt Title="How is Blazor working for you?" />
+    <div id="card-element"></div>*@
+@page "/webviewer"
+<h1>WebViewer</h1>
+<div id='viewer' style="height:700px"></div>
 
-</div>
+
 @code{
     protected override async Task OnInitializedAsync()
     {
 
-        await _jsRuntime.InvokeVoidAsync("initializeStripe", _configuration.GetSection("Stripe:Key").Value);
+        @*await _jsRuntime.InvokeVoidAsync("initializeStripe", _configuration.GetSection("Stripe:Key").Value);*@
+        @*   _jsModule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/pdfviewer.js");*@
     }
     protected override async void OnAfterRender(bool firstRender)
     {
-
-        await _jsRuntime.InvokeVoidAsync("initiateCard");
+        @*   await _jsModule.InvokeAsync<object>("initWebViewer");*@
+        @*await _jsRuntime.InvokeVoidAsync("initiateCard");*@
+        await _pdfViewerService.RenderPdf("viewer", "https://localhost:44380/PdfFileViewer");
     }
 }

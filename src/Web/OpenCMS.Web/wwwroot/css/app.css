@@ -48,3 +48,10 @@ a, .btn-link {
         right: 0.75rem;
         top: 0.5rem;
     }
+.mud-nav-link.active:not(.mud-nav-link-disabled) {
+    color: #f8f9fa !important;
+    background: rgb(31 27 68) !important;
+}
+.mud-nav-link:hover:not(.mud-nav-link-disabled) {
+    color: #f8f9fa !important;
+}

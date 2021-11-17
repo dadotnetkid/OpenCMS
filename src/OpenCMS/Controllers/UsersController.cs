@@ -19,11 +19,13 @@ namespace OpenCMS.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IRepository<Users, string> _userRepo;
+        private readonly IRepository<Roles, string> _rolesRepository;
         private readonly IUserService _userService;
 
-        public UsersController(IRepository<Users, string> userRepo, IUserService userService)
+        public UsersController(IRepository<Users, string> userRepo, IRepository<Roles, string> rolesRepository, IUserService userService)
         {
             _userRepo = userRepo;
+            _rolesRepository = rolesRepository;
             _userService = userService;
         }
         [HttpGet()]
@@ -39,6 +41,18 @@ namespace OpenCMS.Controllers
                     Items = users.ToList(),
                     Total = users.Select(x => x.Id).Count()
                 },
+                HttpStatusCode = System.Net.HttpStatusCode.OK
+            });
+        }
+        [HttpGet()]
+        public IActionResult GetRoles()
+        {
+            var result = _rolesRepository.GetAll();
+
+            return Ok(new BaseResponse<object>()
+            {
+
+                Data = result,
                 HttpStatusCode = System.Net.HttpStatusCode.OK
             });
         }
