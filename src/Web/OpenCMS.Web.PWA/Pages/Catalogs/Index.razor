@@ -1,0 +1,71 @@
+﻿@page "/catalogs"
+
+@inject ICatalogsService _catalogService
+@attribute [Authorize]
+<ContentWrapper CurrentPage="Catalogs">
+    <div class="card">
+        <div class="card-header">
+            <h5>Catalogs</h5>
+        </div>
+        <div class="card-body">
+            <SfGrid DataSource="dataSource" AllowPaging="true" AllowFiltering="true">
+                <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
+                <GridPageSettings PageSizes="true" PageSize="10"></GridPageSettings>
+                <GridColumns>
+                    <GridColumn HeaderText="Manage Records" Width="150">
+                        <HeaderTemplate>
+                            <SfButton IsPrimary="true" IconCss="fas fa-plus-square" OnClick="@(() => ShowAddEditDialog(new CatalogModel()))"></SfButton>
+                        </HeaderTemplate>
+                        <Template>
+                            <SfButton OnClick="@(() => ShowAddEditDialog(context as CatalogModel))" IconCss="fas fa-edit"></SfButton>
+                            <SfButton OnClick="@(() => ShowAddEditDialog(context as CatalogModel))" IconCss="fas fa-trash"></SfButton>
+                        </Template>
+                    </GridColumn>
+                    <GridColumn Field="@nameof(CatalogModel.ItemNumber)"></GridColumn>
+                    <GridColumn Field="@nameof(CatalogModel.Name)"></GridColumn>
+                    <GridColumn Field="@nameof(CatalogModel.LastCost)" Format="n2"></GridColumn>
+                    <GridColumn Field="@nameof(CatalogModel.SellPrice)" Format="n2"></GridColumn>
+                    <GridColumn Field="@nameof(CatalogModel.Quantity)" Format="n2"></GridColumn>
+                </GridColumns>
+            </SfGrid>
+        </div>
+    </div>
+    <AddEditCatalogComponents ShowDialog="showDialog" Model="CatalogModel"></AddEditCatalogComponents>
+</ContentWrapper>
+
+@code {
+    private List<CatalogModel> dataSource = new List<CatalogModel>();
+    private bool isLoading = true;
+    private bool showDialog { get; set; }
+    private CatalogModel CatalogModel { get; set; } = new();
+    protected override async Task OnInitializedAsync()
+    {
+
+        await GetAll();
+    }
+
+    private void ShowAddEditDialog(CatalogModel model)
+    {
+        CatalogModel = model;
+        showDialog = true;
+    }
+
+    private async Task Close(object e)
+    {
+        showDialog = false;
+        await GetAll();
+    }
+
+    private async Task GetAll()
+    {
+        var list = await _catalogService.GetAll();
+        dataSource = list.Items;
+        StateHasChanged();
+    }
+
+    private async void onDialogClose(string str)
+    {
+        showDialog = false;
+        await GetAll();
+    }
+}

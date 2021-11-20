@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\OpenCMS.Application\OpenCMS.Application.csproj" />
     <ProjectReference Include="..\OpenCMS.Domain\OpenCMS.Domain.csproj" />
+    <ProjectReference Include="..\Shared\OpenCMS.Shared.Models\OpenCMS.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

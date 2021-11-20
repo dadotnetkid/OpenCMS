@@ -1,0 +1,91 @@
+﻿<EditForm Model="Model" OnValidSubmit="OnValidForm">
+    <FluentValidationValidator @ref="_fluentValidationValidator" />
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row margin-top-10">
+                <div class="col-lg-12">
+                    <SfTextBox CssClass="e-outline" Autocomplete="AutoComplete.Off" @bind-Value="@Model.ItemNumber" Placeholder="ItemNumber" ShowClearButton="true" FloatLabelType="FloatLabelType.Auto" />
+                    <ValidationMessage For="@(() => Model.ItemNumber)" />
+                </div>
+            </div>
+            <div class="row margin-top-10">
+                <div class="col-lg-12">
+                    <SfTextBox CssClass="e-outline" Autocomplete="AutoComplete.Off" @bind-Value="@Model.Name" Placeholder="Name" ShowClearButton="true" FloatLabelType="FloatLabelType.Auto" />
+                    <ValidationMessage For="@(() => Model.Name)" />
+                </div>
+            </div>
+            <div class="row margin-top-10">
+                <div class="col-lg-7">
+                    <SfCheckBox Checked="@Model.IBuyThisItem" TChecked="bool" ValueChange="@((e)=>OnValueChange(e,nameof(CatalogModel.IBuyThisItem)))" Label="I buy this Item" CssClass="margin-top-10"></SfCheckBox>
+                </div>
+                <div class="col-lg-5">
+                    <SfComboBox Enabled="Model.IBuyThisItem" CssClass="e-outline" TValue="string" TItem="AccountsModel" FloatLabelType="FloatLabelType.Auto" Placeholder="Select Income Account" @bind-Value="Model.IncomeAcount" DataSource="Accounts">
+                        <ComboBoxFieldSettings Text="@nameof(AccountsModel.AccountName)" Value="@nameof(AccountsModel.Id)"></ComboBoxFieldSettings>
+                    </SfComboBox>
+                    <ValidationMessage For="@(() => Model.IncomeAcount)" />
+                </div>
+            </div>
+            <div class="row margin-top-10">
+                <div class="col-lg-7">
+                    <SfCheckBox @bind-Checked="Model.IInventoryThisItem" Label="I invetory this item" CssClass="margin-top-10">
+
+                    </SfCheckBox>
+                </div>
+                <div class="col-lg-5">
+                    <SfComboBox Enabled="Model.IInventoryThisItem" CssClass="e-outline" TValue="string" TItem="AccountsModel" FloatLabelType="FloatLabelType.Auto" Placeholder="Select Inventory Account" @bind-Value="Model.InventoryAccount" DataSource="Accounts">
+                        <ComboBoxFieldSettings Text="@nameof(AccountsModel.AccountName)" Value="@nameof(AccountsModel.Id)"></ComboBoxFieldSettings>
+                    </SfComboBox>
+                    <ValidationMessage For="@(() => Model.InventoryAccount)" />
+                </div>
+            </div>
+            <div class="row margin-top-10">
+                <div class="col-lg-7">
+                    <SfCheckBox @bind-Checked="Model.ISellThisItem" TChecked="bool" ValueChange="@((e)=>OnValueChange(e,nameof(CatalogModel.ISellThisItem)))" Label="I sell this Item" CssClass="margin-top-10"></SfCheckBox>
+                </div>
+                <div class="col-lg-5">
+                    <SfComboBox Enabled="Model.ISellThisItem" CssClass="e-outline" TValue="string" TItem="AccountsModel" FloatLabelType="FloatLabelType.Auto" Placeholder="Select Selling Account" @bind-Value="Model.SalesAcount" DataSource="Accounts">
+                        <ComboBoxFieldSettings Text="@nameof(AccountsModel.AccountName)" Value="@nameof(AccountsModel.Id)"></ComboBoxFieldSettings>
+                    </SfComboBox>
+                    <ValidationMessage For="@(() => Model.SalesAcount)" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row" style="margin-top: 5px">
+        <div class="col-lg-12">
+            <SfButton type="submit">
+                <span class="fas fa-save"></span>
+                Save
+            </SfButton>
+        </div>
+    </div>
+
+
+
+</EditForm>
+@code{
+    [Parameter] public CatalogModel Model { get; set; }
+    [Parameter] public List<AccountsModel> Accounts { get; set; }
+    [Parameter] public EventCallback<CatalogModel> OnModelChange { get; set; }
+    private FluentValidationValidator _fluentValidationValidator;
+    private void OnValidForm()
+    {
+        throw new NotImplementedException();
+    }
+
+    private void NotifyChange()
+    {
+        throw new NotImplementedException();
+    }
+
+    private async Task OnValueChange(Syncfusion.Blazor.Buttons.ChangeEventArgs<bool> obj, string propertyName)
+    {
+        if (propertyName == nameof(CatalogModel.IBuyThisItem))
+            Model.IBuyThisItem = obj.Checked;
+        if (propertyName == nameof(CatalogModel.ISellThisItem))
+            Model.ISellThisItem= obj.Checked;
+        await OnModelChange.InvokeAsync(Model);
+    }
+
+}

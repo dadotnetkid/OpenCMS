@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>OpenCMS.Web.PWA</title>
+    <base href="/" />
+    <link href="css/admin-lte/css/adminlte.min.css" rel="stylesheet" />
+    <link href="css/fontawesome-free/css/all.min.css" rel="stylesheet" />
+    <link href="_content/Syncfusion.Blazor/styles/material.css" rel="stylesheet" />
+    <link href="css/app.css" rel="stylesheet" />
+    <link href="OpenCMS.Web.PWA.styles.css" rel="stylesheet" />
+    <link href="manifest.json" rel="manifest" />
+    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+</head>
+
+<body class="hold-transition sidebar-mini">
+    <div id="app">
+        <div style="position:absolute; top:30vh; width:100%; text-align:center">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"
+                  style="font-size: 16pt; width: 36px; height: 36px; color: purple"></span>
+
+            <p>Loading please wait....</p>
+        </div>
+
+
+    </div>
+
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+    <script src="_framework/blazor.webassembly.js"></script>
+    <script>navigator.serviceWorker.register('service-worker.js');</script>
+</body>
+
+</html>

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FluentValidation;
-using OpenCMS.Web.Infrastructure.Models;
+using OpenCMS.Shared.Models.Models;
 
 namespace OpenCMS.Web.Infrastructure.Validators
 {
@@ -18,11 +18,7 @@ namespace OpenCMS.Web.Infrastructure.Validators
             RuleFor(x => x.LastName)
                 .NotNull()
                 .WithMessage("Lastname is required");
-            RuleFor(x => x.Password)
-                .NotNull()
-                .WithMessage("Password is required")
-                .MinimumLength(3)
-                .WithMessage("Minimum of 3 characters"); 
+           
             RuleFor(x => x.Email)
                 .NotNull()
                 .WithMessage("Email is required")
@@ -32,8 +28,32 @@ namespace OpenCMS.Web.Infrastructure.Validators
                 .NotNull()
                 .WithMessage("Username is required");
 
-
+            RuleFor(x => x.UserRoles)
+                .NotEmpty()
+                .WithMessage("User should have atleast one role");
+            When(x => !string.IsNullOrEmpty(x.Password), () =>
+            {
+                RuleFor(x => x.Password)
+                    .MinimumLength(3)
+                    .WithMessage("Minimum of 3 characters");
+            });
+            When(x => x.Id == null, () =>
+            {
+                RuleFor(x => x.Password)
+                    .NotNull()
+                    .WithMessage("Password is required");
+            });
         }
      
+    }
+
+    public class RoleValidator : BaseAbstractValidator<RoleModel>
+    {
+        public RoleValidator()
+        {
+            RuleFor(x => x.Role)
+                .NotNull()
+                .WithMessage("Role is required");
+        }
     }
 }

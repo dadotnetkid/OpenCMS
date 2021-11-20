@@ -84,7 +84,7 @@ namespace OpenCMS.Controllers
                 FirstName = item.FirstName,
                 MiddleName = item.MiddleName,
                 LastName = item.LastName
-            }, item.Password);
+            }, item.Password, null);
             return Ok();
         }
 

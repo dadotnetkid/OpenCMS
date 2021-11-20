@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 using OpenCMS.Web.Application.Interfaces;
 using OpenCMS.Web.Infrastructure.Models;
 using System.Net.Http.Json;
-using OpenCMS.Web.Infrastructure.Common;
+using OpenCMS.Shared.Common;
+using OpenCMS.Shared.Models;
 
 namespace OpenCMS.Web.Application.Services
 {

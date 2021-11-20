@@ -1,0 +1,117 @@
+﻿@inject IUserService _userService
+
+<SfDialog Target="#target" Width="500px" ShowCloseIcon="true" @bind-Visible="ShowDialog">
+    <DialogTemplates>
+        <Header> Add Edit User</Header>
+        <Content>
+            <EditForm Model="Model" OnValidSubmit="OnValidForm">
+                <FluentValidationValidator @ref="_fluentValidationValidator" />
+                <div class="row">
+                    <div class="col-lg-7">
+                        <div class="row margin-top-10">
+                            <div class="col-lg-12">
+                                <SfTextBox CssClass="e-outline" Autocomplete="AutoComplete.Off" @bind-Value="@Model.FirstName" Placeholder="First Name" ShowClearButton="true" FloatLabelType="FloatLabelType.Auto" />
+                                <ValidationMessage For="@(() => Model.FirstName)" />
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-12">
+                                <SfTextBox CssClass="e-outline" @bind-Value="@Model.MiddleName" Placeholder="Middle Name" ShowClearButton="true" FloatLabelType="FloatLabelType.Auto" />
+                                <ValidationMessage For="@(() => Model.MiddleName)"></ValidationMessage>
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-12">
+                                <SfTextBox CssClass="e-outline" @bind-Value="@Model.LastName" Placeholder="Last Name" ShowClearButton="true" FloatLabelType="FloatLabelType.Auto" />
+                                <ValidationMessage For="@(() => Model.LastName)"></ValidationMessage>
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-12">
+                                <SfTextBox CssClass="e-outline" @bind-Value="@Model.UserName" Placeholder="Username" FloatLabelType="FloatLabelType.Auto" ShowClearButton="true" />
+                                <ValidationMessage For="@(() => Model.UserName)"></ValidationMessage>
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-12">
+                                <SfTextBox CssClass="e-outline" @bind-Value="@Model.Email" FloatLabelType="FloatLabelType.Auto" Placeholder="Email" ShowClearButton="true" />
+                                <ValidationMessage For="@(() => Model.Email)"></ValidationMessage>
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-12">
+                                <SfTextBox CssClass="e-outline" @bind-Value="@Model.Password" Type="InputType.Password" ShowClearButton="true" FloatLabelType="FloatLabelType.Auto" Placeholder="Password" />
+                                <ValidationMessage For="@(() => Model.Password)"></ValidationMessage>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="row margin-top-10">
+                            <div class="col-lg-12">
+                                <SfMultiSelect Placeholder="Roles" FloatLabelType="FloatLabelType.Auto" CssClass="e-outline"
+                                               AllowFiltering="true" TValue="RoleModel[]" TItem="RoleModel"
+                                               @bind-Value="Model.UserRoles" Mode="VisualMode.Box" DataSource="_roles">
+                                    <MultiSelectFieldSettings Text="Role" Value="@nameof(RoleModel.Id)"></MultiSelectFieldSettings>
+
+                                </SfMultiSelect>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:5px">
+                    <div class="col-lg-12">
+                        <SfButton type="submit">
+                            <span class="fas fa-save"></span>
+                            Save
+                        </SfButton>
+                    </div>
+                </div>
+
+
+
+            </EditForm>
+        </Content>
+    </DialogTemplates>
+    <DialogEvents Closed="@DialogClose"></DialogEvents>
+    <DialogButtons>
+
+    </DialogButtons>
+</SfDialog>
+
+@code {
+
+
+    [Parameter] public EventCallback<string> OnDialogClose { get; set; }
+    [Parameter] public bool ShowDialog { get; set; } = false;
+    [Parameter] public UserModel Model { get; set; } = new();
+
+    private RoleModel[] _roles { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var res = await _userService.GetRoles();
+        _roles = res.ToArray();
+    }
+    private async Task DialogClose()
+    {
+        await OnDialogClose.InvokeAsync("");
+    }
+    private async Task OnValidForm()
+    {
+        var result = new BaseResponse();
+        if (!string.IsNullOrEmpty(Model?.Id))
+            result = await _userService.UpdateUser(Model);
+        else
+            result = await _userService.CreateUser(Model);
+        if (result.HttpStatusCode == System.Net.HttpStatusCode.OK)
+        {
+            ShowDialog = false;
+        }
+    }
+    private void ValidateForm()
+    {
+        _fluentValidationValidator.Validate(x => x.IncludeRuleSets("Names"));
+    }
+
+    private FluentValidationValidator _fluentValidationValidator;
+}

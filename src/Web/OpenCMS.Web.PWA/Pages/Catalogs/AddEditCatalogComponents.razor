@@ -1,0 +1,72 @@
+﻿@inject IAccountsService _accountService
+<SfDialog Target="#target" Width="1024px" AllowDragging="true" ShowCloseIcon="true" @bind-Visible="@ShowDialog">
+    <DialogPositionData Y="20px"></DialogPositionData>
+    <DialogTemplates>
+        <Header> Add Edit Catalogs</Header>
+        <Content>
+            <SfTab CssClass="BlazorTab" LoadOn="ContentLoad.Init">
+                <TabItems>
+                    <TabItem >
+                        <ChildContent>
+                            <TabHeader Text="Profile"></TabHeader>
+                        </ChildContent>
+                        <ContentTemplate>
+                            <CatalogProfileComponent Model="Model" Accounts="_accounts" OnModelChange="OnModelChange" />
+                        </ContentTemplate>
+                    </TabItem>
+                    <TabItem Disabled="!Model.IBuyThisItem">
+                        <ChildContent>
+                            <TabHeader Text="Buying Details"></TabHeader>
+                        </ChildContent>
+                        <ContentTemplate>
+                            <BuyingDetailsComponent Model="@Model" Accounts="_accounts" OnModelChange="@OnModelChange"></BuyingDetailsComponent>
+                        </ContentTemplate>
+                    </TabItem> 
+                    <TabItem Disabled="!Model.ISellThisItem">
+                        <ChildContent>
+                            <TabHeader Text="Selling Details"></TabHeader>
+                        </ChildContent>
+                        <ContentTemplate>
+                            <SellingDetailsComponent Accounts="_accounts" Model="Model" OnModelChange="OnModelChange"></SellingDetailsComponent>
+                        </ContentTemplate>
+                    </TabItem>
+                </TabItems>
+
+            </SfTab>
+          
+        </Content>
+    </DialogTemplates>
+    <DialogEvents Closed="@DialogClose" OnOpen="OnDialogOpen"></DialogEvents>
+    <DialogButtons>
+
+    </DialogButtons>
+</SfDialog>
+@code {
+    [Parameter]public bool ShowDialog { get; set; }
+    [Parameter]public CatalogModel Model { get; set; }
+    private FluentValidationValidator _fluentValidationValidator;
+    private List<AccountsModel> _accounts = new();
+    private void DialogClose()
+    {
+        throw new NotImplementedException();
+    }
+
+
+
+    private async Task OnDialogOpen()
+    {
+        if (!_accounts.Any())
+        {
+            _accounts= await _accountService.GetAll();
+
+        }
+    }
+
+    private void OnModelChange(CatalogModel model)
+    {
+        Model = model;
+        Console.WriteLine("hello");
+        StateHasChanged();
+    }
+
+}

@@ -1,12 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Security.Claims;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using OpenCMS.Domain.Models;
+using OpenCMS.Shared.Models;
+using OpenCMS.Shared.Models.Models;
 using OpenCMS.Web.Application.Interfaces;
 using OpenCMS.Web.Infrastructure.Models;
 
@@ -17,7 +21,8 @@ namespace OpenCMS.Web.Application.Services
         private readonly ILocalStorageService _localStorageService;
         private readonly IHttpClientFactory _httpClientFactory;
         public TokenResponse TokenResponse { get; set; }
-
+        private List<Claim> Claims { get; set; }
+        public List<string> UserRoles { get; set; }
 
         public UserService(ILocalStorageService localStorageService, IHttpClientFactory httpClientFactory)
         {
@@ -42,6 +47,13 @@ namespace OpenCMS.Web.Application.Services
         public List<string> GetUserRoles()
         {
             return Claims.Where(x => x.Type == "role").Select(x => x.Value).ToList();
+        }
+
+        public async Task<List<RoleModel>> GetRoles()
+        {
+            var http = _httpClientFactory.CreateClient("OpenCMS");
+            var get = await http.GetFromJsonAsync<BaseResponse<List<RoleModel>>>("users/get-roles");
+            return get?.Data;
         }
 
         public bool GetUserIsRoles(params string[] roles)
@@ -91,29 +103,61 @@ namespace OpenCMS.Web.Application.Services
             }
         }
 
-        public async Task<UserModel> CreateUser(UserModel item)
+        public async Task<BaseResponse> CreateUser(UserModel item)
         {
             var http = _httpClientFactory.CreateClient("OpenCMS");
             var token = await this.GetTokenResponse();
             http.DefaultRequestHeaders.Add("Authorization", "Bearer " + token.AccessToken);
             var post = await http.PostAsJsonAsync("users", item);
-            var content = await post.Content.ReadAsStringAsync();
-            if (JsonSerializer.Deserialize<BaseResponse>(content)?.HttpStatusCode == System.Net.HttpStatusCode.OK)
-            {
-                return JsonSerializer.Deserialize<BaseResponse<UserModel>>(content)?.Data;
-            }
-            return default;
+            if (!post.IsSuccessStatusCode)
+                return new ErrorResponse(post.ReasonPhrase);
+            return new BaseResponse() { HttpStatusCode = HttpStatusCode.OK };
         }
+
+
 
         public string GetUserName()
         {
             return TokenResponse.UserName;
         }
 
+        public async Task<BaseResponse> UpdateUser(UserModel item)
+        {
+            var http = _httpClientFactory.CreateClient("OpenCMS");
+            var token = await GetTokenResponse();
+            http.DefaultRequestHeaders.Add("Authorization", "Bearer " + token.AccessToken);
+            var patch = await http.PatchAsync("users",
+                new StringContent(JsonSerializer.Serialize(item), Encoding.UTF8, "application/json"));
+            if (!patch.IsSuccessStatusCode)
+                return JsonSerializer.Deserialize<ErrorResponse>(await patch.Content.ReadAsStringAsync());
 
-        private List<Claim> Claims { get; set; }
+            return new BaseResponse<object>()
+            {
+                HttpStatusCode = HttpStatusCode.OK
+            };
+        }
+        public async Task<BaseResponse> CreateRole(RoleModel item)
+        {
+            var http = _httpClientFactory.CreateClient("OpenCMS");
+            var token = await GetTokenResponse();
+            http.DefaultRequestHeaders.Add("Authorization", "Bearer " + token.AccessToken);
+            var post = await http.PostAsync("users/create-role", new StringContent(JsonSerializer.Serialize(item), Encoding.UTF8, "application/json"));
+            if (!post.IsSuccessStatusCode)
+                return JsonSerializer.Deserialize<ErrorResponse>(await post.Content.ReadAsStringAsync());
+            return new BaseResponse() { HttpStatusCode = HttpStatusCode.OK };
+        }
 
-        public List<string> UserRoles { get; set; }
+        public async Task<BaseResponse> GetPermissionsInRoles(string roleId)
+        {
+            var http = _httpClientFactory.CreateClient("OpenCMS");
+            var token = await GetTokenResponse();
+            http.DefaultRequestHeaders.Add("Authorization", "Bearer " + token.AccessToken);
+            var post = await http.GetAsync("users/get-all-permission?roleId=" + roleId);
+            if (!post.IsSuccessStatusCode)
+                return JsonSerializer.Deserialize<ErrorResponse>(await post.Content.ReadAsStringAsync());
+            return JsonSerializer.Deserialize<BaseResponse<List<PermissionsInRolesModel>>>(
+                await post.Content.ReadAsStringAsync());
+        }
     }
 }
 

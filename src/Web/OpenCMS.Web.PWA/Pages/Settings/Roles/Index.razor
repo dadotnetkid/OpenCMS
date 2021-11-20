@@ -1,0 +1,93 @@
+﻿@page "/settings/roles"
+@using System.Text.Json
+@inject IUserService _userService
+@attribute [Authorize]
+<ContentWrapper CurrentPage="Roles and Permission">
+    <div class="card">
+        <div class="card-header">
+            <h5>Roles and Permission</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-4">
+                    <SfGrid DataSource="dataSource" AllowPaging="true" AllowFiltering="true" AllowSelection="true">
+                        <GridSelectionSettings Type="Syncfusion.Blazor.Grids.SelectionType.Single"></GridSelectionSettings>
+                        <GridEvents RowSelected="OnRoleRowSelect" TValue="RoleModel"></GridEvents>
+                        <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
+                        <GridPageSettings PageSizes="true" PageSize="10"></GridPageSettings>
+                        <GridColumns>
+                            <GridColumn HeaderText="Manage Records" Width="150">
+                                <HeaderTemplate>
+                                    <SfButton IsPrimary="true" IconCss="fas fa-plus-square" OnClick="@(() => ShowAddEditDialog(new RoleModel()))"></SfButton>
+                                </HeaderTemplate>
+                                <Template>
+                                    <SfButton OnClick="@(() => ShowAddEditDialog(context as RoleModel))" IconCss="fas fa-edit"></SfButton>
+                                    <SfButton OnClick="@(() => ShowAddEditDialog(context as RoleModel))" IconCss="fas fa-trash"></SfButton>
+                                </Template>
+                            </GridColumn>
+                            <GridColumn Field="@nameof(RoleModel.Role)"></GridColumn>
+
+                        </GridColumns>
+                    </SfGrid>
+                </div>
+                <div class="col-lg-8">
+
+                    <PermissionsInRolesComponent PermissionDataSource="permissionDataSource"></PermissionsInRolesComponent>
+                </div>
+            </div>
+        </div>
+    </div>
+    <AddEditRolesComponent Model="RoleModel" ShowDialog="showDialog" OnDialogClose="onDialogClose"></AddEditRolesComponent>
+</ContentWrapper>
+
+@code {
+    private List<RoleModel> dataSource = new List<RoleModel>();
+    private List<PermissionsInRolesModel> permissionDataSource = new List<PermissionsInRolesModel>();
+    private bool isLoading = true;
+    private bool showDialog { get; set; }
+    private RoleModel RoleModel { get; set; } = new();
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAll();
+    }
+
+    private void ShowAddEditDialog(RoleModel model)
+    {
+        RoleModel = model;
+        showDialog = true;
+    }
+
+    private async Task Close(object e)
+    {
+        showDialog = false;
+        await GetAll();
+    }
+
+    private async Task GetAll()
+    {
+        dataSource = await _userService.GetRoles();
+        StateHasChanged();
+    }
+
+    private async void onDialogClose(string str)
+    {
+        showDialog = false;
+        await GetAll();
+    }
+
+    private async Task OnRoleRowSelect(RowSelectEventArgs<RoleModel> obj)
+    {
+        var permission = await _userService.GetPermissionsInRoles(obj.Data.Id);
+        if (permission is BaseResponse<List<PermissionsInRolesModel>> data)
+        {
+            permissionDataSource = data.Data;
+            StateHasChanged();
+        }
+    }
+
+
+
+
+}
+
+

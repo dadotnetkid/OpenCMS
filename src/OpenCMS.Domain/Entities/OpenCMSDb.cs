@@ -20,12 +20,15 @@ namespace OpenCMS.Domain.Entities
         public DbSet<Accounts> Accounts{ get; set; }
         public DbSet<Catalogs> Catalogs { get; set; }
         public DbSet<Inventories> Inventories { get; set; }
+        public DbSet<Permissions> Permissions { get; set; }
+        public DbSet<PermissionsInRoles> PermissionsInRoles { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            
             builder.Entity<Inventories>(e =>
             {
                 e.HasKey(k => k.Id);
@@ -59,6 +62,14 @@ namespace OpenCMS.Domain.Entities
             builder.Entity<Roles>(e =>
             {
                 e.HasKey(x => x.Id);
+                e.HasMany(x => x.PermissionsInRoles).WithOne().HasForeignKey(x => x.RoleId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+            builder.Entity<PermissionsInRoles>(e =>
+            {
+                e.HasKey(x => x.Id);
+                e.HasOne(x => x.Permission).WithMany().HasForeignKey(x => x.PermissionId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
          builder.Entity<Users>().HasMany(x => x.Roles).WithMany(x => x.Users)
                 .UsingEntity<Dictionary<string, object>>("UsersInRoles",

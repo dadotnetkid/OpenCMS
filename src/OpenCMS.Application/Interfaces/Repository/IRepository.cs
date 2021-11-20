@@ -12,7 +12,7 @@ namespace OpenCMS.Application.Interfaces.Repository
     
     {
         public IQueryable<T> Fetch(Expression<Func<T, bool>> filter = null);
-        public List<T> GetAll(Expression<Func<T, bool>> filter=null);
+        public List<T> GetAll(Expression<Func<T, bool>> filter = null, string includeProperties=null);
         T Find(Expression<Func<T, bool>> filter,string includeProperties="");
         public T Find(TKey id);
         Task<T> Insert(T item);

@@ -26,11 +26,19 @@ namespace OpenCMS.Application.Repository
             return _db.Set<T>();
         }
 
-        public List<T> GetAll(Expression<Func<T, bool>> filter=null)
+        public List<T> GetAll(Expression<Func<T, bool>> filter = null, string includeProperties = null)
         {
+            IQueryable<T> res = _db.Set<T>();
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var i in includeProperties.Split(","))
+                {
+                    res = res.Include(i);
+                }
+            }
             if (filter != null)
-                return _db.Set<T>().Where(filter).ToList();
-            return _db.Set<T>().ToList();
+                return res.Where(filter).ToList();
+            return res.ToList();
         }
 
         public T Find(Expression<Func<T, bool>> filter, string includeProperties = "")
@@ -43,9 +51,9 @@ namespace OpenCMS.Application.Repository
                     _dbSet = _dbSet.Include(i);
                 }
 
-                return _dbSet.FirstOrDefault();
+                return _dbSet.AsNoTracking().FirstOrDefault();
             }
-            return _db.Set<T>().Where(filter).FirstOrDefault();
+            return _db.Set<T>().AsNoTracking().Where(filter).FirstOrDefault();
         }
 
         public T Find(TKey id)

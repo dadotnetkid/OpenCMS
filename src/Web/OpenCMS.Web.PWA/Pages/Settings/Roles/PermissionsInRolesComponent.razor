@@ -1,0 +1,42 @@
+﻿@using ClickEventArgs = Syncfusion.Blazor.Navigations.ClickEventArgs
+<SfGrid  DataSource="PermissionDataSource" AllowPaging="true" AllowFiltering="true" Toolbar="@(new List<string>() { "Update","Cancel" })" >
+    <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
+    <GridPageSettings PageSizes="true" PageSize="10"></GridPageSettings>
+    <GridEditSettings AllowEditing="true" ShowConfirmDialog="true" Mode="EditMode.Normal"></GridEditSettings>
+    <GridEvents TValue="PermissionsInRolesModel" OnCellSave="OnSave"></GridEvents>
+    <GridColumns>
+
+        <GridColumn Field="@nameof(PermissionsInRolesModel.Permission)" AllowEditing="false"></GridColumn>
+        <GridColumn Field="@nameof(PermissionsInRolesModel.CanView)" EditType="EditType.BooleanEdit" HeaderText="View" DisplayAsCheckBox="true">
+
+        </GridColumn>
+        <GridColumn Field="@nameof(PermissionsInRolesModel.CanAdd)" EditType="EditType.BooleanEdit" HeaderText="View" DisplayAsCheckBox="true">
+
+        </GridColumn>
+        <GridColumn Field="@nameof(PermissionsInRolesModel.CanUpdate)" EditType="EditType.BooleanEdit" HeaderText="View" DisplayAsCheckBox="true">
+
+        </GridColumn>
+        <GridColumn Field="@nameof(PermissionsInRolesModel.CanDelete)" EditType="EditType.BooleanEdit" HeaderText="View" DisplayAsCheckBox="true">
+
+        </GridColumn>
+
+    </GridColumns>
+</SfGrid>
+@code{
+
+    [Parameter] public List<PermissionsInRolesModel> PermissionDataSource { get; set; } = new();
+
+
+    private void ontoolbar(ClickEventArgs obj)
+    {
+        Console.WriteLine(obj.Item.Text);
+        StateHasChanged();
+    }
+
+
+    private void OnSave(CellSaveArgs<PermissionsInRolesModel> obj)
+    {
+        throw new NotImplementedException();
+    }
+
+}

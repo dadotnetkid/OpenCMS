@@ -30,6 +30,8 @@ namespace OpenCMS.Domain.Entities
         public decimal LastCost { get; set; }
         public decimal SellPrice { get; set; }
         public decimal Quantity { get; set; }
+        public string ManufacturerNo { get; set; }
+        public string Description { get; set; }
     }
 
 }

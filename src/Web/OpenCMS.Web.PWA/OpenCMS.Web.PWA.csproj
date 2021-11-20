@@ -1,0 +1,255 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\css\bootstrap\bootstrap.min.css.map" />
+    <Content Remove="wwwroot\css\open-iconic\FONT-LICENSE" />
+    <Content Remove="wwwroot\css\open-iconic\font\fonts\open-iconic.svg" />
+    <Content Remove="wwwroot\css\open-iconic\ICON-LICENSE" />
+    <Content Remove="wwwroot\css\open-iconic\README.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\css\adminlte.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\css\adminlte.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\css\adminlte.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\css\adminlte.min.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\css\alt\adminlte.components.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\css\alt\adminlte.components.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\css\alt\adminlte.components.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\css\alt\adminlte.components.min.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\css\alt\adminlte.core.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\css\alt\adminlte.core.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\css\alt\adminlte.core.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\css\alt\adminlte.core.min.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\css\alt\adminlte.extra-components.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\css\alt\adminlte.extra-components.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\css\alt\adminlte.extra-components.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\css\alt\adminlte.extra-components.min.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\css\alt\adminlte.pages.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\css\alt\adminlte.pages.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\css\alt\adminlte.pages.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\css\alt\adminlte.pages.min.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\css\alt\adminlte.plugins.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\css\alt\adminlte.plugins.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\css\alt\adminlte.plugins.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\css\alt\adminlte.plugins.min.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\AdminLTELogo.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\avatar.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\avatar04.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\avatar2.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\avatar3.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\avatar5.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\boxed-bg.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\boxed-bg.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\credit\american-express.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\credit\cirrus.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\credit\mastercard.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\credit\mestro.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\credit\paypal.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\credit\paypal2.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\credit\visa.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\default-150x150.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\icons.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\photo1.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\photo2.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\photo3.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\photo4.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\prod-1.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\prod-2.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\prod-3.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\prod-4.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\prod-5.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\user1-128x128.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\user2-160x160.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\user3-128x128.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\user4-128x128.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\user5-128x128.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\user6-128x128.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\user7-128x128.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin-lte\img\user8-128x128.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\images\logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\css\bootstrap\bootstrap.min.css.map" />
+    <None Include="wwwroot\css\open-iconic\FONT-LICENSE" />
+    <None Include="wwwroot\css\open-iconic\font\fonts\open-iconic.svg" />
+    <None Include="wwwroot\css\open-iconic\ICON-LICENSE" />
+    <None Include="wwwroot\css\open-iconic\README.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazored.FluentValidation" Version="2.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.7" PrivateAssets="all" />
+    <PackageReference Include="Syncfusion.Blazor" Version="19.3.0.54" />
+    <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OpenCMS.Web.Application\OpenCMS.Web.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\appsettings.Local.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\css\app.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\bootstrap\bootstrap.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\fontawesome-free\css\all.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\fontawesome-free\css\all.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\fontawesome-free\css\brands.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\fontawesome-free\css\brands.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\fontawesome-free\css\fontawesome.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\fontawesome-free\css\fontawesome.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\fontawesome-free\css\regular.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\fontawesome-free\css\regular.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\fontawesome-free\css\solid.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\fontawesome-free\css\solid.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\fontawesome-free\css\svg-with-js.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\fontawesome-free\css\svg-with-js.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\fontawesome-free\css\v4-shims.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\fontawesome-free\css\v4-shims.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\fontawesome-free\webfonts\fa-brands-400.eot">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\fontawesome-free\webfonts\fa-brands-400.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\fontawesome-free\webfonts\fa-brands-400.ttf">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\fontawesome-free\webfonts\fa-brands-400.woff">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\fontawesome-free\webfonts\fa-brands-400.woff2">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\fontawesome-free\webfonts\fa-regular-400.eot">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\fontawesome-free\webfonts\fa-regular-400.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\fontawesome-free\webfonts\fa-regular-400.ttf">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\fontawesome-free\webfonts\fa-regular-400.woff">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\fontawesome-free\webfonts\fa-regular-400.woff2">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\fontawesome-free\webfonts\fa-solid-900.eot">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\fontawesome-free\webfonts\fa-solid-900.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\fontawesome-free\webfonts\fa-solid-900.ttf">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\fontawesome-free\webfonts\fa-solid-900.woff">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\fontawesome-free\webfonts\fa-solid-900.woff2">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\open-iconic\font\css\open-iconic-bootstrap.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\open-iconic\font\fonts\open-iconic.eot">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\open-iconic\font\fonts\open-iconic.otf">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\open-iconic\font\fonts\open-iconic.ttf">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\open-iconic\font\fonts\open-iconic.woff">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

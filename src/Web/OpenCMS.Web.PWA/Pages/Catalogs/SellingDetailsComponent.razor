@@ -1,0 +1,7 @@
+﻿<h3>SellingDetailsComponent</h3>
+
+@code {
+    [Parameter] public CatalogModel Model { get; set; }
+    [Parameter] public List<AccountsModel> Accounts { get; set; }
+    [Parameter] public EventCallback<CatalogModel> OnModelChange { get; set; }
+}
