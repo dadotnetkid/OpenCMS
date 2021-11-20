@@ -20,6 +20,7 @@ using Microsoft.IdentityModel.Tokens;
 using OpenCMS.Domain.Entities;
 using OpenCMS.Domain.Models;
 using OpenCMS.Infrastructure.Common;
+using OpenCMS.Infrastructure.Mapper;
 using OpenCMS.Infrastructure.Validators;
 
 namespace OpenCMS
@@ -41,7 +42,7 @@ namespace OpenCMS
                 options.UseSqlServer(Configuration.GetConnectionString("OpenCMSDb"));
             });
 
-
+            services.AddAutoMapper(typeof(ModelMapper).Assembly);
             services.AddControllers(option =>
             {
                 option.Filters.Add(typeof(CustomValidationAttribute));
@@ -87,12 +88,12 @@ namespace OpenCMS
                var issuer = Configuration["JWT:Issuer"];
                options.TokenValidationParameters = new TokenValidationParameters
                {
-                    /* ValidateIssuer = true,
-                     ValidateAudience = true,
-                     ValidateLifetime = true,
+                   /* ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
 
-                     ValidIssuer = issuer,
-                     ValidAudience = issuer,*/
+                    ValidIssuer = issuer,
+                    ValidAudience = issuer,*/
                    ValidateIssuer = false,
                    ValidateAudience = false,
                    RequireExpirationTime = false,

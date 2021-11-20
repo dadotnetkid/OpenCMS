@@ -26,7 +26,10 @@ namespace OpenCMS.Domain.Entities
         public string AddressLine2 { get; set; }
         [MaxLength(128)]
         public string CreatedBy { get; set; }
-
+        [MaxLength(128)]
+        public string Email { get; set; }
+        [MaxLength(128)]
+        public string PhoneNumber { get; set; }
         public int CardFileType { get; set; }
         [ForeignKey("CreatedBy")]
         public Users CreatedByUser { get; set; }

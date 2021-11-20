@@ -1,0 +1,75 @@
+﻿@page "/card-files"
+@using OpenCMS.Shared.Common
+@using SelectEventArgs = Syncfusion.Blazor.Navigations.SelectEventArgs
+@inject ICardFilesService _cardFilesService
+
+<ContentWrapper CurrentPage="Card Files">
+    <div class="card">
+        <div class="card-header">
+            <h5>Card Files</h5>
+        </div>
+        <div class="card-body">
+            <SfTab CssClass="BlazorTab" LoadOn="ContentLoad.Init">
+                <TabEvents Selected="OnTabSelectedChange"></TabEvents>
+                <TabItems>
+                    <TabItem>
+                        <ChildContent>
+                            <TabHeader Text="Customer"></TabHeader>
+                        </ChildContent>
+                    </TabItem>
+                    <TabItem >
+                        <ChildContent>
+                            <TabHeader Text="Vendor"></TabHeader>
+                        </ChildContent>
+                    </TabItem>
+                </TabItems>
+            </SfTab>
+            <SfGrid DataSource="dataSource" AllowPaging="true" AllowFiltering="true">
+                <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
+                <GridPageSettings PageSizes="true" PageSize="10"></GridPageSettings>
+                <GridColumns>
+                    <GridColumn HeaderText="Manage Records" Width="150">
+                        <HeaderTemplate>
+                            <SfButton IsPrimary="true" IconCss="fas fa-plus-square" OnClick="@(() => ShowAddEditDialog(new CardFilesModel()))"></SfButton>
+                        </HeaderTemplate>
+                        <Template>
+                            <SfButton OnClick="@(() => ShowAddEditDialog(context as CardFilesModel))" IconCss="fas fa-edit"></SfButton>
+                            <SfButton OnClick="@(() => ShowAddEditDialog(context as CardFilesModel))" IconCss="fas fa-trash"></SfButton>
+                        </Template>
+                    </GridColumn>
+                    <GridColumn Field="@nameof(CardFilesModel.FullName)"></GridColumn>
+                    <GridColumn Field="@nameof(CardFilesModel.PhoneNumber)"></GridColumn>
+                    <GridColumn Field="@nameof(CardFilesModel.Email)"></GridColumn>
+                    <GridColumn Field="@nameof(CardFilesModel.AddressLine1)"></GridColumn>
+                    <GridColumn Field="@nameof(CardFilesModel.AddressLine2)" Format="n2"></GridColumn>
+                </GridColumns>
+            </SfGrid>
+        </div>
+    </div>
+</ContentWrapper>
+@code{
+
+    private List<CardFilesModel> dataSource = new();
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAll(CardFileType.Customer);
+    }
+
+    private void ShowAddEditDialog(CardFilesModel model)
+    {
+        throw new NotImplementedException();
+    }
+    private async Task GetAll(CardFileType cardFileType)
+    {
+        var list = await _cardFilesService.GetAll(cardFileType);
+        dataSource = list.Data.Items;
+        StateHasChanged();
+    }
+
+
+    private async Task OnTabSelectedChange(SelectEventArgs obj)
+    {
+        await GetAll((CardFileType)obj.SelectedIndex);
+    }
+
+}

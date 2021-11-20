@@ -46,7 +46,10 @@
 
     private void ShowAddEditDialog(CatalogModel model)
     {
+
         CatalogModel = model;
+        CatalogModel.BuyingDetails ??= new();
+        CatalogModel.SellingDetails ??= new();
         showDialog = true;
     }
 

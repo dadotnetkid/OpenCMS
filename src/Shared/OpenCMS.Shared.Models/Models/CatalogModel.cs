@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -41,5 +42,35 @@ namespace OpenCMS.Web.Infrastructure.Models
         public decimal? SellPrice { get; set; }
         [JsonPropertyName("quantity")]
         public decimal? Quantity { get; set; }
+        public CatalogBuyingDetailsModel? PreviousBuyingDetails { get; set; } = new();
+        public CatalogBuyingDetailsModel? BuyingDetails { get; set; } = new();
+        public CatalogSellingDetailsModel SellingDetails { get; set; } = new();
+    }
+
+    public class CatalogBuyingDetailsModel
+    {
+        
+        public int Id { get; set; }
+        public int? CatalogId { get; set; }
+        public decimal LastPurchasePrice { get; set; }
+        public decimal StandardCost { get; set; }
+        public string UOM { get; set; }
+        public int BuyingUnit { get; set; }
+        public decimal MinimumLevelRestockingAlert { get; set; }
+        public decimal DefaultReorderQuantity { get; set; }
+        public DateTime AppliedDate { get; set; }
+        public bool IsActive { get; set; }
+    }
+    public class CatalogSellingDetailsModel
+    {
+        public int Id { get; set; }
+        public int CatalogId { get; set; }
+        public decimal BaseSellingPrice { get; set; }
+        public string UOM { get; set; }
+        public int SellingUnit { get; set; }
+        public decimal Retail { get; set; }
+        public decimal WholeSale { get; set; }
+        public bool IsActive { get; set; }
+        public DateTime? AppliedStartDate { get; set; }
     }
 }

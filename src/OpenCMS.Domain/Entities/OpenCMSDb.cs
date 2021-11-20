@@ -22,6 +22,8 @@ namespace OpenCMS.Domain.Entities
         public DbSet<Inventories> Inventories { get; set; }
         public DbSet<Permissions> Permissions { get; set; }
         public DbSet<PermissionsInRoles> PermissionsInRoles { get; set; }
+        public DbSet<CatalogBuyingDetails> CatalogBuyingDetails { get; set; }
+        public DbSet<CatalogSellingDetails> CatalogSellingDetails { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
@@ -36,6 +38,8 @@ namespace OpenCMS.Domain.Entities
             builder.Entity<Catalogs>(e =>
             {
                 e.HasKey(k => k.Id);
+                e.HasMany(x => x.CatalogBuyingDetails).WithOne().HasForeignKey(x => x.CatalogId);
+                e.HasMany(x => x.CatalogSellingDetails).WithOne().HasForeignKey(x => x.CatalogId);
             });
             builder.Entity<Accounts>(e =>
             {

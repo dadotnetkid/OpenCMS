@@ -11,7 +11,7 @@ namespace OpenCMS.Application.Interfaces.Repository
     public interface IRepository<T, TKey> where T : BaseEntity<TKey>
     
     {
-        public IQueryable<T> Fetch(Expression<Func<T, bool>> filter = null);
+        public IQueryable<T> Fetch(Expression<Func<T, bool>> filter = null, string includeProperties = null);
         public List<T> GetAll(Expression<Func<T, bool>> filter = null, string includeProperties=null);
         T Find(Expression<Func<T, bool>> filter,string includeProperties="");
         public T Find(TKey id);

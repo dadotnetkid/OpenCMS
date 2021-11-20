@@ -19,11 +19,19 @@ namespace OpenCMS.Application.Repository
             _db = db;
         }
 
-        public IQueryable<T> Fetch(Expression<Func<T, bool>> filter = null)
+        public IQueryable<T> Fetch(Expression<Func<T, bool>> filter = null, string includeProperties = null)
         {
+            IQueryable<T> src = _db.Set<T>();
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var i in includeProperties.Split(","))
+                {
+                    src = src.Include(i);
+                }
+            }
             if (filter != null)
-                return _db.Set<T>().Where(filter);
-            return _db.Set<T>();
+                return src.Where(filter);
+            return src;
         }
 
         public List<T> GetAll(Expression<Func<T, bool>> filter = null, string includeProperties = null)

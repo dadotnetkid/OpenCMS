@@ -19,7 +19,7 @@
                             <TabHeader Text="Buying Details"></TabHeader>
                         </ChildContent>
                         <ContentTemplate>
-                            <BuyingDetailsComponent Model="@Model" Accounts="_accounts" OnModelChange="@OnModelChange"></BuyingDetailsComponent>
+                            <BuyingDetailsComponent Model="@Model.BuyingDetails" Accounts="_accounts" OnModelChange="@OnModelChange"></BuyingDetailsComponent>
                         </ContentTemplate>
                     </TabItem> 
                     <TabItem Disabled="!Model.ISellThisItem">
@@ -27,7 +27,7 @@
                             <TabHeader Text="Selling Details"></TabHeader>
                         </ChildContent>
                         <ContentTemplate>
-                            <SellingDetailsComponent Accounts="_accounts" Model="Model" OnModelChange="OnModelChange"></SellingDetailsComponent>
+                            <SellingDetailsComponent Accounts="_accounts" Model="Model.SellingDetails" OnModelChange="OnModelChange"></SellingDetailsComponent>
                         </ContentTemplate>
                     </TabItem>
                 </TabItems>

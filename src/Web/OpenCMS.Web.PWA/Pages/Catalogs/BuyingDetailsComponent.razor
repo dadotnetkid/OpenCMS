@@ -1,8 +1,60 @@
-﻿<h3>BuyingDetailsComponent</h3>
+﻿<EditForm Model="Model" OnValidSubmit="OnValidForm">
+<FluentValidationValidator @ref="_fluentValidationValidator" />
+<div class="row margin-top-10">
+    <div class="col-6">
+       @* <div class="row margin-top-10">
+            <div class="col-lg-12">
+                <SfNumericTextBox Enabled="false" @bind-Value="Model.PreviousBuyingDetails.StandardCost" Placeholder="Previous Cost" CssClass="e-outline" FloatLabelType="FloatLabelType.Auto"></SfNumericTextBox>
+            </div>
+        </div>*@
+        <div class="row margin-top-10">
+            <div class="col-lg-12">
+                <SfNumericTextBox @bind-Value="Model.StandardCost" Placeholder="Standard Cost" CssClass="e-outline" FloatLabelType="FloatLabelType.Auto"></SfNumericTextBox>
+            </div>
+        </div>
+        <div class="row margin-top-10">
+            <div class="col-lg-12">
+                <SfTextBox @bind-Value="Model.UOM" Placeholder="UOM" CssClass="e-outline" FloatLabelType="FloatLabelType.Auto"></SfTextBox>
+            </div>
+        </div>
+        <div class="row margin-top-10">
+            <div class="col-lg-12">
+                <SfNumericTextBox @bind-Value="Model.BuyingUnit" Placeholder="Buying Unit of Measure" CssClass="e-outline" FloatLabelType="FloatLabelType.Auto"></SfNumericTextBox>
+            </div>
+        </div>
+        <div class="row margin-top-10">
+            <div class="col-lg-12">
+                <SfNumericTextBox @bind-Value="Model.MinimumLevelRestockingAlert" Placeholder="Minimum Level Restocking Alert" CssClass="e-outline" FloatLabelType="FloatLabelType.Auto"></SfNumericTextBox>
+            </div>
+        </div>
+        <div class="row margin-top-10">
+            <div class="col-lg-12">
+                <SfNumericTextBox @bind-Value="Model.DefaultReorderQuantity" Placeholder="Default Reorder Quantity" CssClass="e-outline" FloatLabelType="FloatLabelType.Auto"></SfNumericTextBox>
+            </div>
+        </div>
 
+    </div>
+</div>
+<div class="row margin-top-10">
+    <div class="col-lg-12">
+        <SfButton type="submit">
+            <span class="fas fa-save"></span>
+            Save
+        </SfButton>
+    </div>
+</div>
+    </EditForm>
 @code {
-    [Parameter] public CatalogModel Model { get; set; }
+
+    [Parameter]
+    public CatalogBuyingDetailsModel Model { get; set; } = new();
     [Parameter] public List<AccountsModel> Accounts { get; set; }
     [Parameter] public EventCallback<CatalogModel> OnModelChange { get; set; }
-   
+    private FluentValidationValidator _fluentValidationValidator;
+    private void OnValidForm()
+    {
+        throw new NotImplementedException();
+    }
+
+
 }
