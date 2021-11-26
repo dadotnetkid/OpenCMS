@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenCMS.Web.PWA", "src\Web\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{1572D1AC-6E57-4C1A-8DC7-F006103BD6DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenCMS.Shared", "src\Shared\OpenCMS.Shared.Models\OpenCMS.Shared.csproj", "{7BC83A4F-EE37-4122-B243-19635027A0C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenCMS.Shared", "src\Shared\OpenCMS.Shared.Models\OpenCMS.Shared.csproj", "{7BC83A4F-EE37-4122-B243-19635027A0C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

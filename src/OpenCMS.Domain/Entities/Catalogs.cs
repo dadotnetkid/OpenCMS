@@ -37,6 +37,7 @@ namespace OpenCMS.Domain.Entities
         public decimal Quantity { get; set; }
         public string ManufacturerNo { get; set; }
         public string Description { get; set; }
+        public bool Perishable { get; set; }
         public virtual ICollection<CatalogBuyingDetails> CatalogBuyingDetails { get; set; }
         public virtual ICollection<CatalogSellingDetails> CatalogSellingDetails{ get; set; }
     }

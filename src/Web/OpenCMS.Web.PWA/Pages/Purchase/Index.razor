@@ -1,0 +1,77 @@
+﻿@page "/purchases"
+@using Newtonsoft.Json
+@inject ITransactionService _transactionService
+@inject NavigationManager _navigationManager
+@attribute [Authorize]
+<ContentWrapper CurrentPage="Purchases">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <SfTab>
+                        <TabItems>
+                            <TabItem>
+
+                                <TabHeader Text="Quotation">
+                                </TabHeader>
+                            </TabItem>
+                            <TabItem>
+                                <TabHeader Text="Orders">
+                                </TabHeader>
+                            </TabItem>
+                            <TabItem>
+                                <TabHeader Text="Invoice">
+                                </TabHeader>
+                            </TabItem>
+                        </TabItems>
+                    </SfTab>
+                    <SfGrid DataSource="dataSource" AllowPaging="true" AllowFiltering="true">
+                        <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
+                        <GridPageSettings PageSizes="true" PageSize="10"></GridPageSettings>
+                        <GridColumns>
+                            <GridColumn HeaderText="Manage Records" Width="150">
+                                <HeaderTemplate>
+                                    <SfButton IsPrimary="true" IconCss="fas fa-plus-square" OnClick="@(() => ShowAddEditDialog(new TransactionModel()))"></SfButton>
+                                </HeaderTemplate>
+                                <Template>
+                                    <SfButton OnClick="@(() => ShowAddEditDialog(context as TransactionModel))" IconCss="fas fa-edit"></SfButton>
+                                    <SfButton OnClick="@(() => ShowAddEditDialog(context as TransactionModel))" IconCss="fas fa-trash"></SfButton>
+                                </Template>
+                            </GridColumn>
+                            <GridColumn Field="CardFile.FullName" HeaderText="Customer Name"></GridColumn>
+                            <GridColumn Field="TotalAmount" Format="n2"></GridColumn>
+                            <GridColumn Field="DateCreated" Format="MM/dd/yyyy"></GridColumn>
+
+                        </GridColumns>
+                    </SfGrid>
+                </div>
+            </div>
+        </div>
+    </div>
+</ContentWrapper>
+@code {
+    private List<TransactionModel> dataSource = new();
+    protected override async Task OnInitializedAsync()
+    {
+        var res = await _transactionService.Get(TransactionTypes.Purchase);
+        if (res.HttpStatusCode == System.Net.HttpStatusCode.OK)
+        {
+            var source = res as BaseResponse<List<TransactionModel>>;
+            dataSource = source.Data;
+        }
+    }
+
+
+    private void ShowAddEditDialog(TransactionModel context)
+    {
+        Console.WriteLine(context.Id);
+        if (context.Id == 0)
+        {
+            _navigationManager.NavigateTo("purchases/add-edit-purchase");
+            return;
+        }
+        _navigationManager.NavigateTo("purchases/add-edit-purchase/" + context.Id);
+    }
+
+}
+

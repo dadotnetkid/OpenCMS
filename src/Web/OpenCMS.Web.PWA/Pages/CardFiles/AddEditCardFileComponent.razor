@@ -1,0 +1,143 @@
+﻿@inject ICardFilesService _cardFilesService
+
+<SfDialog Target="#target" Width="1024px" AllowDragging="true" ShowCloseIcon="true" @bind-Visible="@ShowDialog">
+    <DialogPositionData Y="20px"></DialogPositionData>
+    <DialogTemplates>
+        <Header> Add Edit Card Files</Header>
+        <Content>
+            <EditForm Model="Model" OnValidSubmit="OnValidSubmit">
+                <FluentValidationValidator></FluentValidationValidator>
+                <div class="row margin-top-10">
+                    <div class="col-lg-8">
+                        <div class="row margin-top-10">
+                            <div class="col-lg-5">
+                                <SfTextBox CssClass="e-outline" Autocomplete="AutoComplete.Off" @bind-Value="@Model.FirstName" Placeholder="First Name"
+                                           ShowClearButton="true" FloatLabelType="FloatLabelType.Auto"/>
+                                <ValidationMessage For="@(() => Model.FirstName)"/>
+                            </div>
+                            <div class="col-lg-2">
+                                <SfTextBox CssClass="e-outline" Autocomplete="AutoComplete.Off" @bind-Value="@Model.MiddleName" Placeholder="M.I"
+                                           ShowClearButton="true" FloatLabelType="FloatLabelType.Auto"/>
+                                <ValidationMessage For="@(() => Model.MiddleName)"/>
+                            </div>
+                            <div class="col-lg-5">
+                                <SfTextBox CssClass="e-outline" Autocomplete="AutoComplete.Off" @bind-Value="@Model.LastName" Placeholder="Last Name"
+                                           ShowClearButton="true" FloatLabelType="FloatLabelType.Auto"/>
+                                <ValidationMessage For="@(() => Model.LastName)"/>
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-6">
+                                <SfTextBox CssClass="e-outline" Autocomplete="AutoComplete.Off" @bind-Value="@Model.PhoneNumber" Placeholder="Phone Number"
+                                           ShowClearButton="true" FloatLabelType="FloatLabelType.Auto"/>
+                                <ValidationMessage For="@(() => Model.PhoneNumber)"/>
+                            </div>
+                            <div class="col-lg-6">
+                                <SfTextBox CssClass="e-outline" Autocomplete="AutoComplete.Off" @bind-Value="@Model.Email" Placeholder="Email"
+                                           ShowClearButton="true" FloatLabelType="FloatLabelType.Auto"/>
+                                <ValidationMessage For="@(() => Model.Email)"/>
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-12">
+                                <SfTextBox CssClass="e-outline" Autocomplete="AutoComplete.Off" @bind-Value="@Model.AddressLine1" Placeholder="Address Line1"
+                                           ShowClearButton="true" FloatLabelType="FloatLabelType.Auto"/>
+                                <ValidationMessage For="@(() => Model.AddressLine1)"/>
+                            </div>
+
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-12">
+                                <SfTextBox CssClass="e-outline" Autocomplete="AutoComplete.Off" @bind-Value="@Model.AddressLine2" Placeholder="Address Line2"
+                                           ShowClearButton="true" FloatLabelType="FloatLabelType.Auto"/>
+                                <ValidationMessage For="@(() => Model.AddressLine2)"/>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="row margin-top-10">
+                            <div class="col-lg-12">
+                                <SfComboBox DataSource="_cardFileTypes" TItem="CardFileTypes"
+                                            TValue="CardFileType"
+                                            CssClass="e-outline"
+                                            FloatLabelType="FloatLabelType.Auto"
+                                            @bind-Value="@Model.CardFileType" Placeholder="Card Type">
+                                    <ComboBoxFieldSettings Value="CardFileType" Text="Type"></ComboBoxFieldSettings>
+                                </SfComboBox>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row margin-top-10">
+                    <div class="col-lg-12">
+                        <SfButton type="submit">
+                            <span class="fas fa-save"></span>
+                            Save
+                        </SfButton>
+                    </div>
+                </div>
+            </EditForm>
+        </Content>
+    </DialogTemplates>
+    <DialogEvents Closed="@DialogClose" OnOpen="OnDialogOpen"></DialogEvents>
+</SfDialog>
+@code{
+
+
+    [Parameter] public bool ShowDialog { get; set; }
+    [Parameter]
+    public CardFilesModel Model { get; set; } = new();
+    [Parameter]public EventCallback OnSave { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    private FluentValidationValidator _fluentValidationValidator;
+
+    private List<CardFileTypes> _cardFileTypes = new();
+
+    private void DialogClose()
+    {
+    }
+
+    private void OnDialogOpen()
+    {
+        _cardFileTypes = new List<CardFileTypes>
+    {
+            new()
+            {
+                Type="Customer",CardFileType= CardFileType.Customer
+            },
+            new()
+            {
+                Type="Supplier",CardFileType= CardFileType.Supplier
+            },
+        };
+    }
+    private async Task OnValidSubmit()
+    {
+        var result = await _cardFilesService.CreateOrUpdate(Model);
+        if (result.HttpStatusCode == System.Net.HttpStatusCode.BadRequest)
+        {
+            Console.WriteLine("");
+
+        }
+        else
+        {
+            var res = (BaseResponse<CardFilesModel>)result;
+            await OnSave.InvokeAsync();
+        }
+    }
+}
+@code{
+
+    public class CardFileTypes
+    {
+
+
+        public CardFileType CardFileType { get; set; }
+
+        public string Type { get; set; }
+    }
+
+
+
+}

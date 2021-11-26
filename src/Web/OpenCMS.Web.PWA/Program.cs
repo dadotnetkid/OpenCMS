@@ -7,10 +7,13 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using FluentValidation;
+using OpenCMS.Shared.Models;
+using OpenCMS.Shared.Validators;
 using OpenCMS.Web.Application.Interfaces;
 using OpenCMS.Web.Application.Services;
 using Syncfusion.Blazor;
-
+using MudBlazor.Services;
 namespace OpenCMS.Web.PWA
 {
     public class Program
@@ -28,13 +31,21 @@ namespace OpenCMS.Web.PWA
             builder.Services.AddScoped<IAccountsService, AccountsService>();
             builder.Services.AddScoped<ICatalogsService, CatalogsService>();
             builder.Services.AddScoped<IPdfViewerService, PdfViewerService>();
-          
-
+            builder.Services.AddScoped<ITransactionService, TransactionService>();
+            builder.Services.AddScoped<ITestService, TestService>();
+            builder. Services.AddTransient<IValidator<TransactionItemModel>, SalesItemsValidators>();
+            builder. Services.AddTransient<IValidator<CardFilesModel>, CardFilesValidator>();
+            builder.Services.AddMudServices();
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddHttpClient("OpenCMS", c =>
             {
-
-                var url = builder.Configuration.GetSection("OpenCMS:ApiUrl");
+                var config = builder.Configuration;
+                var url = config.GetSection("OpenCMS:ApiUrl");
+                var key = config.GetSection("OpenCMS:Key");
+                var secret = config.GetSection("OpenCMS:Secret");
+                var apiKey = Convert.ToBase64String(Encoding.UTF8.GetBytes(key.Value + ":" + secret.Value));
+                c.DefaultRequestHeaders.Add("ApiKey", apiKey);
+                c.DefaultRequestHeaders.Add("Domain", config.GetSection("OpenCMS:Domain").Value);
                 c.BaseAddress = new Uri(url.Value);
             });
             builder.Services.AddScoped<IOpenCMSHttpClient, OpenCMSHttpClient>();

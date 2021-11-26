@@ -13,5 +13,6 @@ namespace OpenCMS.Web.Application.Interfaces
     {
         public Task<PaginatedBaseResponse<List<CardFilesModel>>> GetAll(CardFileType cardFileType);
         Task Delete(CardFilesModel item);
+        Task<BaseResponse> CreateOrUpdate(CardFilesModel model);
     }
 }

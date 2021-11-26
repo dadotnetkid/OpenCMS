@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -21,7 +22,7 @@ using OpenCMS.Domain.Entities;
 using OpenCMS.Domain.Models;
 using OpenCMS.Infrastructure.Common;
 using OpenCMS.Infrastructure.Mapper;
-using OpenCMS.Infrastructure.Validators;
+using OpenCMS.Shared.Validators;
 
 namespace OpenCMS
 {
@@ -88,12 +89,6 @@ namespace OpenCMS
                var issuer = Configuration["JWT:Issuer"];
                options.TokenValidationParameters = new TokenValidationParameters
                {
-                   /* ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-
-                    ValidIssuer = issuer,
-                    ValidAudience = issuer,*/
                    ValidateIssuer = false,
                    ValidateAudience = false,
                    RequireExpirationTime = false,

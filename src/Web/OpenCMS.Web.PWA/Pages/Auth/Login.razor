@@ -1,24 +1,25 @@
 ﻿@layout LoginLayout
 @page "/auth/login"
 
-
+@inject ITestService _testService
 @inject IAuthenticationService _authenticationService
 @inject NavigationManager _navigationManager
 
 <EditForm Model="loginModel" OnValidSubmit="submitForm">
     <div class="input-group mb-2">
-        <Syncfusion.Blazor.Inputs.SfTextBox Placeholder="Username" FloatLabelType="@FloatLabelType.Auto"></Syncfusion.Blazor.Inputs.SfTextBox>
+        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="loginModel.Username" Placeholder="Username" FloatLabelType="@FloatLabelType.Auto"></Syncfusion.Blazor.Inputs.SfTextBox>
     </div>
     <div class="input-group mb-2">
-        <Syncfusion.Blazor.Inputs.SfTextBox Placeholder="Password" Type="InputType.Password" FloatLabelType="@FloatLabelType.Auto"></Syncfusion.Blazor.Inputs.SfTextBox>
-        
+        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="loginModel.Password" Placeholder="Password" Type="InputType.Password" FloatLabelType="@FloatLabelType.Auto"></Syncfusion.Blazor.Inputs.SfTextBox>
+
     </div>
     <div class="row">
 
         <!-- /.col -->
         <div class="col-12">
-            <SfProgressButton CssClass="sf-button-full-width"  Content="Login" IsPrimary="true" >
+            <SfProgressButton CssClass="sf-button-full-width" Content="Login"  Duration="99999" IsPrimary="true" Disabled="isLoading">
                 <ProgressButtonSpinSettings Position="SpinPosition.Left" ></ProgressButtonSpinSettings>
+                
             </SfProgressButton>
         </div>
     </div>
@@ -30,8 +31,12 @@
     private void SignIn()
     {
     }
-
-    private class LoginModel
+        protected override void OnInitialized()
+        {
+          
+            base.OnInitialized();
+        }
+        private class LoginModel
     {
         [Required(ErrorMessage = "Username is required")]
         public string Username { get; set; }
@@ -39,7 +44,7 @@
         public string Password { get; set; }
     }
 
-    private async void submitForm()
+    private async Task submitForm()
     {
         isLoading = true;
         var loginResult = await _authenticationService.Login(loginModel.Username, loginModel.Password);
@@ -47,7 +52,6 @@
         {
             _navigationManager.NavigateTo("/");
         }
-
     }
 
 }

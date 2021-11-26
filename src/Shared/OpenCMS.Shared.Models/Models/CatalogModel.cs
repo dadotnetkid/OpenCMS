@@ -42,6 +42,8 @@ namespace OpenCMS.Web.Infrastructure.Models
         public decimal? SellPrice { get; set; }
         [JsonPropertyName("quantity")]
         public decimal? Quantity { get; set; }
+        [JsonPropertyName("perishable")]
+        public bool Perishable { get; set; }
         public CatalogBuyingDetailsModel? PreviousBuyingDetails { get; set; } = new();
         public CatalogBuyingDetailsModel? BuyingDetails { get; set; } = new();
         public CatalogSellingDetailsModel SellingDetails { get; set; } = new();

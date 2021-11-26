@@ -9,28 +9,43 @@ namespace OpenCMS.Domain.Entities
 {
     public class OpenCMSDb : DbContext
     {
-        public OpenCMSDb(DbContextOptions<OpenCMSDb> options) :base(options)
+        public OpenCMSDb(DbContextOptions<OpenCMSDb> options) : base(options)
         {
-            
+
         }
         public DbSet<Agents> Agents { get; set; }
         public DbSet<Users> Users { get; set; }
         public DbSet<Roles> Roles { get; set; }
-        public DbSet<CardFiles> CardFiles{ get; set; }
-        public DbSet<Accounts> Accounts{ get; set; }
+        public DbSet<CardFiles> CardFiles { get; set; }
+        public DbSet<Accounts> Accounts { get; set; }
         public DbSet<Catalogs> Catalogs { get; set; }
         public DbSet<Inventories> Inventories { get; set; }
         public DbSet<Permissions> Permissions { get; set; }
         public DbSet<PermissionsInRoles> PermissionsInRoles { get; set; }
         public DbSet<CatalogBuyingDetails> CatalogBuyingDetails { get; set; }
         public DbSet<CatalogSellingDetails> CatalogSellingDetails { get; set; }
+        public DbSet<Tenants> Tenants { get; set; }
+        
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            
+            builder.Entity<Transactions>(e =>
+            {
+                e.HasKey(x => x.Id);
+                e.HasMany(x => x.SalesItems)
+                    .WithOne(x => x.Sales)
+                    .HasForeignKey(x => x.SalesId)
+                    .OnDelete(DeleteBehavior.Cascade);
+                e.HasOne(x => x.CardFile).WithMany().HasForeignKey(x => x.CardFileId).OnDelete(DeleteBehavior.Cascade);
+            });
+            builder.Entity<TransactionItems>(e =>
+            {
+                e.HasKey(x => x.Id);
+                e.HasOne(x => x.Catalogs).WithMany().HasForeignKey(x => x.CatalogId).OnDelete(DeleteBehavior.Cascade);
+            });
             builder.Entity<Inventories>(e =>
             {
                 e.HasKey(k => k.Id);
@@ -75,12 +90,12 @@ namespace OpenCMS.Domain.Entities
                 e.HasOne(x => x.Permission).WithMany().HasForeignKey(x => x.PermissionId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
-         builder.Entity<Users>().HasMany(x => x.Roles).WithMany(x => x.Users)
-                .UsingEntity<Dictionary<string, object>>("UsersInRoles",
-                    b=>b.HasOne<Roles>().WithMany().HasForeignKey("RoleId"),
-                    b=>b.HasOne<Users>().WithMany().HasForeignKey("UserId")
-                    
-                    );
+            builder.Entity<Users>().HasMany(x => x.Roles).WithMany(x => x.Users)
+                   .UsingEntity<Dictionary<string, object>>("UsersInRoles",
+                       b => b.HasOne<Roles>().WithMany().HasForeignKey("RoleId"),
+                       b => b.HasOne<Users>().WithMany().HasForeignKey("UserId")
+
+                       );
             base.OnModelCreating(builder);
         }
     }

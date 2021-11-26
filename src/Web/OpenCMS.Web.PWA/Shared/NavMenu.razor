@@ -1,4 +1,5 @@
-﻿<aside class="main-sidebar sidebar-dark-primary elevation-4">
+﻿@inject IUserService _userService
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
 
     <NavLink class="brand-link" href="/">
         <img src="css/admin-lte/img/AdminLTELogo.png"
@@ -15,7 +16,7 @@
                 <img src="css/admin-lte/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block">Alexander Pierce</a>
+                <a href="#" class="d-block">@_userService.GetGivenName()</a>
             </div>
         </div>
 
@@ -33,6 +34,15 @@
                 </li>
                 <li class="nav-item">
 
+                    <NavLink class="nav-link" href="/card-files" Match="NavLinkMatch.All">
+                        <i class="nav-icon fas fa-address-card"></i>
+                        <p>
+                            Card Files
+                        </p>
+                    </NavLink>
+                </li>
+                <li class="nav-item">
+
                     <NavLink class="nav-link" href="/catalogs" Match="NavLinkMatch.All">
                         <i class="nav-icon fas fa-list"></i>
                         <p>
@@ -42,10 +52,28 @@
                 </li>
                 <li class="nav-item">
 
-                    <NavLink class="nav-link" href="/card-files" Match="NavLinkMatch.All">
-                        <i class="nav-icon fas fa-address-card"></i>
+                    <NavLink class="nav-link" href="/purchases" Match="NavLinkMatch.Prefix">
+                        <i class="nav-icon fas fa-cart-plus"></i>
                         <p>
-                            Card Files
+                            Purchases
+                        </p>
+                    </NavLink>
+                </li>
+                <li class="nav-item">
+
+                    <NavLink class="nav-link" href="/inventory" Match="NavLinkMatch.All">
+                        <i class="nav-icon fas fa-boxes"></i>
+                        <p>
+                            Inventory
+                        </p>
+                    </NavLink>
+                </li>
+                <li class="nav-item">
+
+                    <NavLink class="nav-link" href="/sales" Match="NavLinkMatch.Prefix">
+                        <i class="nav-icon fas fa-cart-plus"></i>
+                        <p>
+                            Sales
                         </p>
                     </NavLink>
                 </li>

@@ -16,6 +16,7 @@ namespace OpenCMS.Infrastructure.Common
         {
             services.AddScoped(typeof(IRepository<,>), typeof(RepositoryService<,>));
             services.AddHttpContextAccessor();
+            services.AddScoped<ITenantService, TenantService>();
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
             /*   services.AddScoped<IRepository<Agents, int>, AgentsRepo>();
@@ -23,7 +24,7 @@ namespace OpenCMS.Infrastructure.Common
             services.AddScoped<IPasswordHasher<Users>, PasswordHasher<Users>>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IUserService, UserService>();
-
+            services.AddScoped<ISalesService, SalesService>();
         }
     }
 }

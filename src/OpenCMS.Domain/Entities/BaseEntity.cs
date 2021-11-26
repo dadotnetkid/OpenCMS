@@ -8,5 +8,7 @@ namespace OpenCMS.Domain.Entities
 {
     public class BaseEntity<TKey>
     {
+        public int TenantId { get; set; }
+        public bool Deleted { get; set; }
     }
 }

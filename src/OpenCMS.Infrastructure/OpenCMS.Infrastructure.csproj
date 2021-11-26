@@ -6,8 +6,11 @@
 
   <ItemGroup>
     <Compile Remove="Manager\**" />
+    <Compile Remove="Validators\**" />
     <EmbeddedResource Remove="Manager\**" />
+    <EmbeddedResource Remove="Validators\**" />
     <None Remove="Manager\**" />
+    <None Remove="Validators\**" />
   </ItemGroup>
 
   <ItemGroup>

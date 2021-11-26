@@ -24,6 +24,7 @@ namespace OpenCMS.Controllers
 {
 
     [ApiController]
+    [Guard]
     public class AuthController : ControllerBase
     {
         private readonly IAuthenticationService _authenticationService;
@@ -44,18 +45,13 @@ namespace OpenCMS.Controllers
             _userService = userService;
             _env = env;
             _mockCredentials = mockCredentials;
-
             _jwtSettings = jwtSettings.Value;
         }
 
         [HttpPost(".auth")]
         public IActionResult Authenticate([FromBody] LoginModel item)
         {
-            if (_env.IsDevelopment())
-            {
-                item.UserName = _mockCredentials.Value.UserName;
-                item.Password = _mockCredentials.Value.Password;
-            }
+           
             var res = _authenticationService.Verify(item.UserName, item.Password);
             if (res.Succeeded)
             {

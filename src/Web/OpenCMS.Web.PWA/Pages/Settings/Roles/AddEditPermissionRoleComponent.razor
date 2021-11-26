@@ -1,0 +1,68 @@
+﻿<SfDialog Target="#target" Width="500px" ShowCloseIcon="true" @bind-Visible="@ShowDialog">
+    <DialogPositionData Y="20px"></DialogPositionData>
+    <DialogTemplates>
+        <Header> Add Edit Permission</Header>
+        <Content>
+            <EditForm Model="Model" OnValidSubmit="OnValidForm">
+                <FluentValidationValidator @ref="_fluentValidationValidator" />
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row margin-top-10">
+                            <div class="col-lg-12">
+                                <SfTextBox CssClass="e-outline" Autocomplete="AutoComplete.Off" @bind-Value="@Model.Permission" Readonly="true" Placeholder="Permission" ShowClearButton="true" FloatLabelType="FloatLabelType.Auto" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row margin-top-10">
+                    <div class="col-lg-3">
+                        <SfCheckBox TChecked="bool" @bind-Checked="Model.CanView " Label="View"></SfCheckBox>
+                    </div>
+                    <div class="col-lg-3">
+                        <SfCheckBox TChecked="bool" @bind-Checked="Model.CanAdd" Label="Add"></SfCheckBox>
+                    </div>
+                    <div class="col-lg-3">
+                        <SfCheckBox TChecked="bool" @bind-Checked="Model.CanUpdate " Label="Update"></SfCheckBox>
+                    </div>
+                    <div class="col-lg-3">
+                        <SfCheckBox TChecked="bool" @bind-Checked="Model.CanDelete" Label="Delete"></SfCheckBox>
+                    </div>
+                </div>
+                <hr />
+                <div class="row" style="margin-top: 15px">
+                    <div class="col-lg-12">
+                        <SfButton type="submit">
+                            <span class="fas fa-save"></span>
+                            Save
+                        </SfButton>
+                    </div>
+                </div>
+
+
+
+            </EditForm>
+        </Content>
+    </DialogTemplates>
+    <DialogEvents Closed="@DialogClose"></DialogEvents>
+    <DialogButtons>
+
+    </DialogButtons>
+</SfDialog>
+@code {
+    [Parameter]
+    public PermissionsInRolesModel Model { get; set; }
+    [Parameter]
+    public bool ShowDialog { get; set; } = false;
+
+    private void OnValidForm()
+    {
+    }
+
+    private FluentValidationValidator _fluentValidationValidator;
+
+    private void DialogClose()
+    {
+    }
+
+}

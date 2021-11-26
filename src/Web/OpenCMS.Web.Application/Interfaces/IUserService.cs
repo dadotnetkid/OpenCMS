@@ -19,7 +19,8 @@ namespace OpenCMS.Web.Application.Interfaces
         public TokenResponse TokenResponse { get; set; }
         public bool IsAuthenticated();
         
-        public string GetUserName();
+        public string GetUserName();  
+        public string GetGivenName();
         public Task<BaseResponse> UpdateUser(UserModel item);
         public Task<BaseResponse> CreateUser(UserModel item);
         public Task<BaseResponse> CreateRole(RoleModel item);

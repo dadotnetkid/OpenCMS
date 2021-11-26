@@ -39,5 +39,20 @@ namespace OpenCMS.Web.Application.Services
             _http.DefaultRequestHeaders.Add("Authorization", "Bearer " + _userService.TokenResponse?.AccessToken);
             var delete= await _http.DeleteAsync($"cardfiles/{item.Id}");
         }
+
+        public async Task<BaseResponse> CreateOrUpdate(CardFilesModel model)
+        {
+            var _http = _clientFactory.CreateClient("OpenCMS");
+            _http.DefaultRequestHeaders.Add("Authorization", "Bearer " + _userService.TokenResponse?.AccessToken);
+            var contentString = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
+            var post= await _http.PostAsync($"cardfiles",contentString);
+            BaseResponse result =JsonSerializer.Deserialize<ErrorResponse>(await post.Content.ReadAsStringAsync());
+            if(result .HttpStatusCode==System.Net.HttpStatusCode.BadRequest)
+            {
+                return result;
+            }
+            result = JsonSerializer.Deserialize<BaseResponse<CardFilesModel>>(await post.Content.ReadAsStringAsync());
+            return result;
+        }
     }
 }

@@ -58,6 +58,7 @@ namespace OpenCMS.Application.Services
         public object GenerateToken(string userName)
         {
             var user = _userRepo.Find(x => x.UserName == userName,"Roles");
+            
             var tokenHandler = new JwtSecurityTokenHandler();
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
@@ -66,7 +67,8 @@ namespace OpenCMS.Application.Services
             {
                 new(ClaimTypes.Name, user.UserName) ,
                 new(ClaimTypes.NameIdentifier, user.Id) ,
-                new (ClaimTypes.Email,user.Email)
+                new (ClaimTypes.Email,user.Email),
+                new(ClaimTypes.GivenName,user.FirstName + " " + user.LastName)
             };
             if (user.Roles.Any())
             {

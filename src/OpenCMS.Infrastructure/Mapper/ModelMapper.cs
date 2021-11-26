@@ -16,12 +16,22 @@ namespace OpenCMS.Infrastructure.Mapper
         {
             MapCatalog();
             MapCardFile();
+            MapSales();
+        }
+
+        private void MapSales()
+        {
+            CreateMap<Transactions, TransactionModel>();
+            CreateMap<TransactionModel,Transactions>();
+            CreateMap<TransactionItems, TransactionItemModel>();
+            CreateMap<TransactionItemModel,TransactionItems>();
         }
 
         private void MapCardFile()
         {
             CreateMap<CardFiles, CardFilesModel>()
                 .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.FirstName + " " + src.LastName));
+            CreateMap<CardFilesModel, CardFiles>();
         }
 
         private void MapCatalog()

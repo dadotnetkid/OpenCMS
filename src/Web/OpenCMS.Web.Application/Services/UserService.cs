@@ -80,6 +80,7 @@ namespace OpenCMS.Web.Application.Services
                 var handler = new JwtSecurityTokenHandler();
                 var jwtSecurityToken = handler.ReadJwtToken(token?.AccessToken);
                 this.Claims = jwtSecurityToken.Claims.ToList();
+
                 TokenResponse = token;
             }
         }
@@ -119,6 +120,10 @@ namespace OpenCMS.Web.Application.Services
         public string GetUserName()
         {
             return TokenResponse.UserName;
+        }
+        public string GetGivenName()
+        {
+            return this.Claims.Find(x => x.Type =="given_name")?.Value;
         }
 
         public async Task<BaseResponse> UpdateUser(UserModel item)

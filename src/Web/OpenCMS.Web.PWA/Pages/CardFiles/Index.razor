@@ -5,9 +5,7 @@
 
 <ContentWrapper CurrentPage="Card Files">
     <div class="card">
-        <div class="card-header">
-            <h5>Card Files</h5>
-        </div>
+      
         <div class="card-body">
             <SfTab CssClass="BlazorTab" LoadOn="ContentLoad.Init">
                 <TabEvents Selected="OnTabSelectedChange"></TabEvents>
@@ -46,10 +44,14 @@
             </SfGrid>
         </div>
     </div>
+    <AddEditCardFileComponent ShowDialog="_showDialog" Model="_cardFilesModel" OnSave="OnSave" OnClose="OnClose"></AddEditCardFileComponent>
 </ContentWrapper>
 @code{
-
+    private bool _showDialog = false;
+    private CardFilesModel _cardFilesModel = new();
     private List<CardFilesModel> dataSource = new();
+    private CardFileType _cardFileType;
+
     protected override async Task OnInitializedAsync()
     {
         await GetAll(CardFileType.Customer);
@@ -57,7 +59,9 @@
 
     private void ShowAddEditDialog(CardFilesModel model)
     {
-        throw new NotImplementedException();
+        model.CardFileType = _cardFileType;
+        _cardFilesModel = model;
+        _showDialog = true;
     }
     private async Task GetAll(CardFileType cardFileType)
     {
@@ -69,7 +73,18 @@
 
     private async Task OnTabSelectedChange(SelectEventArgs obj)
     {
-        await GetAll((CardFileType)obj.SelectedIndex);
+        _cardFileType = (CardFileType) obj.SelectedIndex;
+        await GetAll(_cardFileType);
     }
 
+    private async Task OnSave()
+    {
+        _showDialog = false;
+        await GetAll(_cardFileType);
+    }
+
+    private void OnClose()
+    {
+        _showDialog = false;
+    }
 }
