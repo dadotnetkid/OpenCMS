@@ -11,6 +11,7 @@ using OpenCMS.Application.Interfaces.Services;
 using OpenCMS.Domain.Entities;
 using OpenCMS.Infrastructure.Common;
 using OpenCMS.Shared.Models;
+using OpenCMS.Shared.Models.InputModels;
 
 namespace OpenCMS.Controllers
 {
@@ -34,9 +35,9 @@ namespace OpenCMS.Controllers
         {
             var item = _cardFileService.Fetch(x => x.CardFileType == cardFileType);
             var model = _mapper.ProjectTo<CardFilesModel>(item);
-            return Ok(new PaginatedResponse<object>()
+            return Ok(new PaginatedBaseResponse<object>()
             {
-                Data = new PaginateItems<object>()
+                Data = new PaginatedBaseItems<object>()
                 {
                     Items = model,
                     Total = item.Count()
@@ -52,7 +53,7 @@ namespace OpenCMS.Controllers
                 await _cardFileService.Insert(domain);
             else
                 await _cardFileService.Update(domain);
-            return Ok(new BaseResponse<object>()
+            return Ok(new Shared.Models.BaseResponse<object>()
             {
                 HttpStatusCode = System.Net.HttpStatusCode.OK,
                 Data = item
@@ -62,7 +63,7 @@ namespace OpenCMS.Controllers
         public async Task<IActionResult> Delete(int cardFileId)
         {
             await _cardFileService.Delete(cardFileId);
-            return Ok(new BaseResponse<object>()
+            return Ok(new Shared.Models.BaseResponse<object>()
             {
                 HttpStatusCode = System.Net.HttpStatusCode.OK
             });

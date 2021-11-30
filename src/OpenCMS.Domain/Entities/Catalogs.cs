@@ -27,15 +27,16 @@ namespace OpenCMS.Domain.Entities
         public bool? ISellThisItem { get; set; }
         public bool? IInventoryThisItem { get; set; }
         [MaxLength(128)]
-        public string SalesAcount { get; set; }
+        public string SalesAccount { get; set; }
         [MaxLength(128)]
-        public string IncomeAcount { get; set; }
+        public string IncomeAccount { get; set; }
         [MaxLength(128)]
         public string InventoryAccount { get; set; }
         public decimal LastCost { get; set; }
         public decimal SellPrice { get; set; }
         public decimal Quantity { get; set; }
         public string ManufacturerNo { get; set; }
+        public string SKU { get; set; }
         public string Description { get; set; }
         public bool Perishable { get; set; }
         public virtual ICollection<CatalogBuyingDetails> CatalogBuyingDetails { get; set; }
@@ -60,7 +61,7 @@ namespace OpenCMS.Domain.Entities
         public virtual Catalogs Catalog { get; set; }
     }
     [Table("CatalogBuyingDetails")]
-    public class CatalogBuyingDetails
+    public class CatalogBuyingDetails:BaseEntity<int>
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -73,8 +74,8 @@ namespace OpenCMS.Domain.Entities
         public decimal MinimumLevelRestockingAlert { get; set; }
         public decimal DefaultReorderQuantity { get; set; }
         public DateTime AppliedDate { get; set; }
-        public bool IsActive { get; set; }
 
         public virtual Catalogs Catalog { get; set; }
+        public bool IsActive { get; set; }
     }
 }

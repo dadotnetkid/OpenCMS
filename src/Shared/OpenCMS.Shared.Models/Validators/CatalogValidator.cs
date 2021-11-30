@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using OpenCMS.Shared.Models;
 using OpenCMS.Web.Infrastructure.Models;
 
 namespace OpenCMS.Shared.Validators
@@ -7,12 +8,15 @@ namespace OpenCMS.Shared.Validators
     {
         public CatalogValidator()
         {
+            RuleFor(x => x.ItemNumber)
+                .NotNull()
+                .WithMessage("Item number is required");
             RuleFor(x => x.Name)
                 .NotNull()
                 .WithMessage("Name is required");
             When(x => x.IBuyThisItem, () =>
             {
-                RuleFor(x => x.IncomeAcount)
+                RuleFor(x => x.IncomeAccount)
                     .NotNull()
                     .WithMessage("Income Account should not be empty");
             });
@@ -24,7 +28,7 @@ namespace OpenCMS.Shared.Validators
             });
             When(x => x.ISellThisItem, () =>
             {
-                RuleFor(x => x.SalesAcount)
+                RuleFor(x => x.SalesAccount)
                     .NotNull()
                     .WithMessage("Sales Account should not be empty");
             });

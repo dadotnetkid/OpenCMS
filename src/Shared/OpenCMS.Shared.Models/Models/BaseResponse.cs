@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Text.Json.Serialization;
 
-namespace OpenCMS.Web.Infrastructure.Models
+namespace OpenCMS.Shared.Models
 {
     public class BaseResponse
     {
@@ -26,7 +26,8 @@ namespace OpenCMS.Web.Infrastructure.Models
     {
         [JsonPropertyName("items")]
         public T Items { get; set; }
-       
+
+        public int Total { get; set; }
     }
     public class ErrorResponse :BaseResponse
     {

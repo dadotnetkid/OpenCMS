@@ -17,6 +17,13 @@ namespace OpenCMS.Infrastructure.Mapper
             MapCatalog();
             MapCardFile();
             MapSales();
+            MapChartOfAccount();
+        }
+
+        private void MapChartOfAccount()
+        {
+            CreateMap<Accounts, AccountModel>();
+            CreateMap<Classifications, ClassificationModel>();
         }
 
         private void MapSales()
@@ -38,10 +45,12 @@ namespace OpenCMS.Infrastructure.Mapper
         {
             CreateMap<CatalogSellingDetails, CatalogSellingDetailsModel>();
             CreateMap<CatalogBuyingDetails, CatalogBuyingDetailsModel>();
+            CreateMap<CatalogBuyingDetailsModel,CatalogBuyingDetails>();
             CreateMap<Catalogs, CatalogModel>()
                 .ForMember(dest => dest.BuyingDetails, opt => opt.MapFrom(src => src.CatalogBuyingDetails.FirstOrDefault(x => x.IsActive)))
                 .ForMember(dest => dest.PreviousBuyingDetails, opt => opt.MapFrom(src => src.CatalogBuyingDetails.OrderBy(x => x.Id).FirstOrDefault()))
                 .ForMember(dest => dest.SellingDetails, opt => opt.MapFrom(src => src.CatalogSellingDetails.FirstOrDefault()));
+            CreateMap<CatalogModel, Catalogs>();
         }
     }
 }

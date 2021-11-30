@@ -12,10 +12,12 @@ namespace OpenCMS.Web.Application.Interfaces
 {
     public interface ITransactionService
     {
-        public Task<BaseResponse> Get(TransactionTypes transactionTypes=TransactionTypes.Sales);
-        public Task<BaseResponse> GetById(int saleId, TransactionTypes transactionType);
+        public Task<BaseResponse> Get(TransactionType transactionType = TransactionType.Sales,
+            TransactionStatus transactionStatus=TransactionStatus.Quotation);
+        public Task<BaseResponse> GetById(int saleId, TransactionType transactionType);
         public Task<BaseResponse> GetSalesItems(int saleId);
         public Task<BaseResponse> DeleteSalesItems(int saleId,int salesItemId);
         public Task<BaseResponse> CreateOrUpdate(TransactionModel model, ObservableCollection<TransactionItemModel> salesItemModels);
+        Task<BaseResponse> Delete(int transactionId);
     }
 }

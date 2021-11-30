@@ -21,10 +21,11 @@ namespace OpenCMS.Web.Application.Services
         {
             _openCmsHttpClient = openCMSHttpClient;
         }
-        public async Task<BaseResponse> Get(TransactionTypes transactionTypes = TransactionTypes.Sales)
+        public async Task<BaseResponse> Get(TransactionType transactionType = TransactionType.Sales,
+            TransactionStatus transactionStatus = TransactionStatus.Quotation)
         {
             var http = _openCmsHttpClient.Create();
-            var get = await http.GetAsync("transactions/" + (int)transactionTypes);
+            var get = await http.GetAsync("transactions/" + (int)transactionType + "/" + (int)transactionStatus);
             var content = await get.Content.ReadAsStringAsync();
 
             var result = JsonSerializer.Deserialize<BaseResponse>(content);
@@ -34,7 +35,7 @@ namespace OpenCMS.Web.Application.Services
 
         }
 
-        public async Task<BaseResponse> GetById(int transactionId, TransactionTypes transactionType)
+        public async Task<BaseResponse> GetById(int transactionId, TransactionType transactionType)
         {
             var http = _openCmsHttpClient.Create();
             var get = await http.GetAsync($"transactions/{transactionId}/details");
@@ -82,7 +83,7 @@ namespace OpenCMS.Web.Application.Services
             var model = new
             {
                 salesModel,
-                salesItemModels = salesItemModels.Select(x => new { x.Id, x.DiscountId, x.CreatedBy, x.Deleted, x.SalesId, x.CatalogId, x.Quantity, x.SubTotal, x.IsModified, x.IsNew })
+                salesItemModels = salesItemModels.Select(x => new { x.Id, x.DiscountId, x.CreatedBy, x.Deleted, SalesId = x.TransactionId, x.CatalogId, x.Quantity, x.SubTotal, x.IsModified, x.IsNew })
             };
             var stringContent = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
             var createOrUpdate = salesModel.Id == 0 ? await http.PostAsync($"transactions", stringContent) : await http.PatchAsync("transactions", stringContent);
@@ -92,6 +93,20 @@ namespace OpenCMS.Web.Application.Services
             if (result.HttpStatusCode == System.Net.HttpStatusCode.OK)
             {
                 return JsonSerializer.Deserialize<BaseResponse>(content);
+            }
+            return JsonSerializer.Deserialize<ErrorResponse>(content);
+        }
+
+        public async Task<BaseResponse> Delete(int transactionId)
+        {
+            var http = _openCmsHttpClient.Create();
+            var get = await http.DeleteAsync($"transactions/{transactionId}");
+            var content = await get.Content.ReadAsStringAsync();
+
+            var result = JsonSerializer.Deserialize<BaseResponse>(content);
+            if (result.HttpStatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return JsonSerializer.Deserialize<BaseResponse<List<TransactionModel>>>(content);
             }
             return JsonSerializer.Deserialize<ErrorResponse>(content);
         }

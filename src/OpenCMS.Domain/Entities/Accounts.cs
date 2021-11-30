@@ -36,6 +36,8 @@ namespace OpenCMS.Domain.Entities
         public string CreatedBy { get; set; }
         [MaxLength(255)]
         public string UpdatedBy { get; set; }
+
+        public Classifications Classifications { get; set; }
     }
 
 }

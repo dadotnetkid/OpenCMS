@@ -1,0 +1,160 @@
+﻿<SfDialog Target="#target" Width="768px" AllowDragging="true" ShowCloseIcon="true" Visible="ShowDialog">
+    <DialogPositionData Y="20px"></DialogPositionData>
+    <DialogTemplates>
+        <Header>
+            <i class="far fa-credit-card"></i>
+            Make Payment
+        </Header>
+        <Content>
+            <EditForm Model="_paymentModel" OnValidSubmit="SubmitPayment">
+                <FluentValidationValidator></FluentValidationValidator>
+                <div class="row margin-top-10">
+                    <div class="col-lg-6">
+                        <div class="row margin-top-10">
+                            <div class="col-lg-12">
+                                <SfNumericTextBox @bind-Value="TransactionModel.TotalAmount"
+                                                  CssClass="e-outline" FloatLabelType="FloatLabelType.Auto"
+                                                  Placeholder="Total Amount"
+                                                  Readonly="true"
+                                                  ShowSpinButton="false">
+                                </SfNumericTextBox>
+
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-12">
+                                <SfComboBox TItem="EnumModel" TValue="int?"
+                                            CssClass="e-outline" FloatLabelType="FloatLabelType.Auto"
+                                            Placeholder="Payment Term"
+                                            DataSource="_paymentTerms"
+                                            @bind-value="@_paymentModel.Term">
+                                    <ComboBoxFieldSettings Text="Text" Value="Id"></ComboBoxFieldSettings>
+                                </SfComboBox>
+                                <ValidationMessage For="@(()=>_paymentModel.Term)"></ValidationMessage>
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-12">
+                                <SfComboBox TItem="EnumModel" TValue="int?"
+                                            CssClass="e-outline" FloatLabelType="FloatLabelType.Auto"
+                                            Placeholder="Payment Method"
+                                            DataSource="_paymentMethodList"
+                                            @bind-value="@_paymentModel.PaymentMethod">
+                                    <ComboBoxFieldSettings Text="Text" Value="Id"></ComboBoxFieldSettings>
+                                </SfComboBox>
+                                <ValidationMessage For="@(()=>_paymentModel.PaymentMethod)"></ValidationMessage>
+                            </div>
+                        </div>
+
+                        @if (_paymentModel.PaymentMethod == (int)PaymentMethod.Check)
+                        {
+                            <div class="row margin-top-10">
+                                <div class="col-lg-12">
+                                    <SfTextBox CssClass="e-outline" FloatLabelType="FloatLabelType.Auto"
+                                               Placeholder="Check Number"
+                                               @bind-Value="_paymentModel.CheckNumber">
+                                    </SfTextBox>
+                                    <ValidationMessage For="@(()=>_paymentModel.CheckNumber)"></ValidationMessage>
+                                </div>
+                            </div>
+                            <div class="row margin-top-10">
+                                <div class="col-lg-12">
+                                    <SfNumericTextBox CssClass="e-outline" FloatLabelType="FloatLabelType.Auto"
+                                                      Placeholder="Check Amount"
+                                                      @bind-Value="_paymentModel.CheckAmount">
+                                    </SfNumericTextBox>
+                                    <ValidationMessage For="@(()=>_paymentModel.CheckAmount)"></ValidationMessage>
+                                </div>
+                            </div>
+                            <div class="row margin-top-10">
+                                <div class="col-lg-12">
+                                    <SfTextBox CssClass="e-outline" FloatLabelType="FloatLabelType.Auto"
+                                               Placeholder="Bank"
+                                               @bind-Value="_paymentModel.Bank">
+                                    </SfTextBox>
+                                    <ValidationMessage For="@(()=>_paymentModel.Bank)"></ValidationMessage>
+                                </div>
+                            </div>
+                        }
+                        @if (_paymentModel.PaymentMethod == (int)PaymentMethod.Credit || _paymentModel.PaymentMethod == (int)PaymentMethod.Debit)
+                        {
+                            <div class="row margin-top-10">
+                                <div class="col-lg-12">
+                                    <SfNumericTextBox CssClass="e-outline" TValue="decimal?"
+                                                      FloatLabelType="FloatLabelType.Auto"
+                                                      Placeholder="Amount Paid"
+                                                      @bind-Value="_paymentModel.PaymentAmount"
+                                                      Min="TransactionModel.TotalAmount / 2"
+                                                      Max="TransactionModel.TotalAmount"
+                                                     >
+
+                                    </SfNumericTextBox>
+                                    <ValidationMessage For="@(()=>_paymentModel.PaymentAmount)"></ValidationMessage>
+                                </div>
+                            </div>
+                            <div class="row margin-top-10">
+                                <div class="col-lg-12">
+                                    <SfTextBox CssClass="e-outline" FloatLabelType="FloatLabelType.Auto"
+                                               @bind-Value="_paymentModel.TransactionNumber"
+                                               Placeholder="Transaction/Terminal No">
+                                    </SfTextBox>
+                                    <ValidationMessage For="@(()=>_paymentModel.TransactionNumber)"></ValidationMessage>
+                                </div>
+                            </div>
+                        }
+                        @if (_paymentModel.PaymentMethod == (int)PaymentMethod.Cash)
+                        {
+                            <div class="row margin-top-10">
+                                <div class="col-lg-12">
+                                    <SfNumericTextBox CssClass="e-outline" TValue="decimal?"
+                                                      FloatLabelType="FloatLabelType.Auto"
+                                                      Placeholder="Amount Paid"
+                                                      @bind-Value="_paymentModel.PaymentAmount"
+                                                     >
+                                    </SfNumericTextBox>
+                                    <ValidationMessage For="@(()=>_paymentModel.PaymentMethod)"></ValidationMessage>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 5px">
+                    <div class="col-lg-12">
+                        <SfButton type="submit">
+                            <span class="fas fa-save"></span>
+                            Save
+                        </SfButton>
+                    </div>
+                </div>
+            </EditForm>
+        </Content>
+    </DialogTemplates>
+    <DialogEvents OnOpen="OnPaymentMethodOpen">
+
+    </DialogEvents>
+</SfDialog>
+@code {
+
+    [Parameter]
+    public bool ShowDialog { get; set; }
+    [Parameter]
+    public TransactionModel TransactionModel { get; set; } = new();
+    private List<EnumModel> _paymentMethodList = new();
+    private List<EnumModel> _paymentTerms = new();
+    private PaymentsModel _paymentModel = new();
+    private void OnPaymentMethodOpen()
+    {
+        _paymentMethodList = Enum.GetValues<PaymentMethod>().Select(x => new EnumModel { Id = (int)x, Text = x.ToString() }).ToList();
+        _paymentTerms = Enum.GetValues<PaymentTerm>().Select(x => new EnumModel { Id = (int)x, Text = x.GetDescription() }).ToList();
+        _paymentModel.Transaction = TransactionModel;
+
+
+    }
+
+    private void SubmitPayment()
+    {
+        throw new NotImplementedException();
+    }
+
+}

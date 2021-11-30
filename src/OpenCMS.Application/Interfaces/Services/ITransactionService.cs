@@ -8,7 +8,7 @@ using OpenCMS.Shared.Models.InputModels;
 
 namespace OpenCMS.Application.Interfaces.Services
 {
-    public interface ISalesService
+    public interface ITransactionService
     {
         public Task<TransactionModel> CreateOrUpdate(CreateOrUpdateTransactionInputModel inputModel);
     }

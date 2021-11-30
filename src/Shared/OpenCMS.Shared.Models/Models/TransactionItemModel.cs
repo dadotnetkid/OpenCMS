@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using OpenCMS.Shared.Common;
 using OpenCMS.Web.Infrastructure.Models;
 
 namespace OpenCMS.Shared.Models
@@ -12,8 +13,8 @@ namespace OpenCMS.Shared.Models
     {
         [JsonPropertyName("id")]
         public int Id { get; set; }
-        [JsonPropertyName("salesId")]
-        public int? SalesId { get; set; }
+        [JsonPropertyName("transactionId")]
+        public int? TransactionId { get; set; }
         [JsonPropertyName("catalogId")]
         public int? CatalogId { get; set; }
 
@@ -29,5 +30,7 @@ namespace OpenCMS.Shared.Models
         public virtual CatalogModel Catalogs { get; set; }
         [JsonPropertyName("expiryDate")]
         public DateTime? ExpiryDate { get; set; }
+
+        public TransactionType TransactionType { get; set; }
     }
 }

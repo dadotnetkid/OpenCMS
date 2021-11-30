@@ -1,15 +1,12 @@
-﻿#nullable enable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
-namespace OpenCMS.Web.Infrastructure.Models
+namespace OpenCMS.Shared.Models
 {
     public class CatalogModel
     {
+        
+
         [JsonPropertyName("id")]
         public int Id { get; set; }
 
@@ -28,11 +25,11 @@ namespace OpenCMS.Web.Infrastructure.Models
         [JsonPropertyName("iInventoryThisItem")]
         public bool IInventoryThisItem { get; set; }
 
-        [JsonPropertyName("salesAcount")]
-        public string SalesAcount { get; set; }
+        [JsonPropertyName("salesAccount")]
+        public string SalesAccount { get; set; }
 
-        [JsonPropertyName("incomeAcount")]
-        public string IncomeAcount { get; set; }
+        [JsonPropertyName("incomeAccount")]
+        public string IncomeAccount { get; set; }
 
         [JsonPropertyName("inventoryAccount")]
         public string InventoryAccount { get; set; }
@@ -47,6 +44,9 @@ namespace OpenCMS.Web.Infrastructure.Models
         public CatalogBuyingDetailsModel? PreviousBuyingDetails { get; set; } = new();
         public CatalogBuyingDetailsModel? BuyingDetails { get; set; } = new();
         public CatalogSellingDetailsModel SellingDetails { get; set; } = new();
+        public string ManufacturerNo { get; set; }
+        [JsonPropertyName("SKU")]
+        public string SKU { get; set; }
     }
 
     public class CatalogBuyingDetailsModel
@@ -66,7 +66,7 @@ namespace OpenCMS.Web.Infrastructure.Models
     public class CatalogSellingDetailsModel
     {
         public int Id { get; set; }
-        public int CatalogId { get; set; }
+        public int? CatalogId { get; set; }
         public decimal BaseSellingPrice { get; set; }
         public string UOM { get; set; }
         public int SellingUnit { get; set; }

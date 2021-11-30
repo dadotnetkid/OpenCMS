@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using OpenCMS.Shared.Models;
 using OpenCMS.Web.Application.Interfaces;
 using OpenCMS.Web.Infrastructure.Models;
 

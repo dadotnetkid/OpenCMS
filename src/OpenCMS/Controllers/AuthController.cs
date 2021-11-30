@@ -19,6 +19,8 @@ using OpenCMS.Application.Interfaces.Services;
 using OpenCMS.Domain.Entities;
 using OpenCMS.Domain.Models;
 using OpenCMS.Infrastructure.Common;
+using OpenCMS.Shared.Models;
+using OpenCMS.Shared.Models.InputModels;
 
 namespace OpenCMS.Controllers
 {

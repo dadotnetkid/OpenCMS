@@ -15,7 +15,7 @@
                         </HeaderTemplate>
                         <Template>
                             <SfButton OnClick="@(() => ShowAddEditDialog(context as CatalogModel))" IconCss="fas fa-edit"></SfButton>
-                            <SfButton OnClick="@(() => ShowAddEditDialog(context as CatalogModel))" IconCss="fas fa-trash"></SfButton>
+                            <SfButton OnClick="@(() => DeleteItem(context as CatalogModel))" IconCss="fas fa-trash"></SfButton>
                         </Template>
                     </GridColumn>
                     <GridColumn Field="@nameof(CatalogModel.ItemNumber)"></GridColumn>
@@ -24,14 +24,15 @@
                     <GridColumn Field="@nameof(CatalogModel.SellPrice)" Format="n2"></GridColumn>
                     <GridColumn Field="@nameof(CatalogModel.Quantity)" Format="n2"></GridColumn>
                 </GridColumns>
+                <SfSpinner Size="40" Type="SpinnerType.Bootstrap" Visible="@isLoading"></SfSpinner>
             </SfGrid>
         </div>
     </div>
-    <AddEditCatalogComponents ShowDialog="showDialog" Model="CatalogModel"></AddEditCatalogComponents>
+    <AddEditCatalogComponents OnDialogClose="OnDialogClose" ShowDialog="showDialog" Model="CatalogModel"></AddEditCatalogComponents>
 </ContentWrapper>
 
 @code {
-    private List<CatalogModel> dataSource = new List<CatalogModel>();
+    private List<CatalogModel> dataSource = new();
     private bool isLoading = true;
     private bool showDialog { get; set; }
     private CatalogModel CatalogModel { get; set; } = new();
@@ -45,8 +46,8 @@
     {
 
         CatalogModel = model;
-        CatalogModel.BuyingDetails ??= new();
-        CatalogModel.SellingDetails ??= new();
+        CatalogModel.BuyingDetails ??= new(){CatalogId=model?.Id};
+        CatalogModel.SellingDetails ??= new(){ CatalogId = model?.Id };
         showDialog = true;
     }
 
@@ -58,14 +59,26 @@
 
     private async Task GetAll()
     {
+        isLoading = true;
         var list = await _catalogService.GetAll();
-        dataSource = list.Items;
+        dataSource = list.Data.Items;
+        isLoading = false;
         StateHasChanged();
     }
 
-    private async void onDialogClose(string str)
+    private async void OnDialogClose(bool refresh)
     {
         showDialog = false;
-        await GetAll();
+        if (refresh)
+            await GetAll();
     }
+
+    private async Task DeleteItem(CatalogModel context)
+    {
+        isLoading = true;
+        await _catalogService.Delete(context.Id);
+        await GetAll();
+        isLoading = false;
+    }
+
 }

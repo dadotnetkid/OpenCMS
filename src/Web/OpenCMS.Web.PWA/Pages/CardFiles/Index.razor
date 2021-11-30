@@ -1,11 +1,12 @@
 ﻿@page "/card-files"
 @using OpenCMS.Shared.Common
 @using SelectEventArgs = Syncfusion.Blazor.Navigations.SelectEventArgs
+@using MudBlazor
 @inject ICardFilesService _cardFilesService
-
+@inject IDialogService _dialogService
 <ContentWrapper CurrentPage="Card Files">
     <div class="card">
-      
+
         <div class="card-body">
             <SfTab CssClass="BlazorTab" LoadOn="ContentLoad.Init">
                 <TabEvents Selected="OnTabSelectedChange"></TabEvents>
@@ -15,7 +16,7 @@
                             <TabHeader Text="Customer"></TabHeader>
                         </ChildContent>
                     </TabItem>
-                    <TabItem >
+                    <TabItem>
                         <ChildContent>
                             <TabHeader Text="Vendor"></TabHeader>
                         </ChildContent>
@@ -32,7 +33,7 @@
                         </HeaderTemplate>
                         <Template>
                             <SfButton OnClick="@(() => ShowAddEditDialog(context as CardFilesModel))" IconCss="fas fa-edit"></SfButton>
-                            <SfButton OnClick="@(() => ShowAddEditDialog(context as CardFilesModel))" IconCss="fas fa-trash"></SfButton>
+                            <SfButton OnClick="@(() => DeleteItem(context as CardFilesModel))" IconCss="fas fa-trash"></SfButton>
                         </Template>
                     </GridColumn>
                     <GridColumn Field="@nameof(CardFilesModel.FullName)"></GridColumn>
@@ -41,6 +42,8 @@
                     <GridColumn Field="@nameof(CardFilesModel.AddressLine1)"></GridColumn>
                     <GridColumn Field="@nameof(CardFilesModel.AddressLine2)" Format="n2"></GridColumn>
                 </GridColumns>
+                
+                <SfSpinner Size="40" Type="SpinnerType.Bootstrap"  Visible="@isLoading"></SfSpinner>
             </SfGrid>
         </div>
     </div>
@@ -51,7 +54,7 @@
     private CardFilesModel _cardFilesModel = new();
     private List<CardFilesModel> dataSource = new();
     private CardFileType _cardFileType;
-
+    private bool isLoading;
     protected override async Task OnInitializedAsync()
     {
         await GetAll(CardFileType.Customer);
@@ -65,15 +68,17 @@
     }
     private async Task GetAll(CardFileType cardFileType)
     {
-        var list = await _cardFilesService.GetAll(cardFileType);
+        isLoading = true;
+        var list = await _cardFilesService.GetAll((int)cardFileType);
         dataSource = list.Data.Items;
+        isLoading = false;
         StateHasChanged();
     }
 
 
     private async Task OnTabSelectedChange(SelectEventArgs obj)
     {
-        _cardFileType = (CardFileType) obj.SelectedIndex;
+        _cardFileType = (CardFileType)obj.SelectedIndex;
         await GetAll(_cardFileType);
     }
 
@@ -87,4 +92,16 @@
     {
         _showDialog = false;
     }
+
+    private async Task DeleteItem(CardFilesModel context)
+    {
+        bool? result = await _dialogService.ShowMessageBox(
+            "Warning",
+            "Deleting can not be undone!",
+            yesText: "Delete!", cancelText: "Cancel");
+        await _cardFilesService.Delete(context.Id);
+        await GetAll(_cardFileType);
+    }
+
+
 }

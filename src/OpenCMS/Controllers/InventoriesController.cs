@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using OpenCMS.Application.Interfaces.Repository;
 using OpenCMS.Domain.Entities;
 using OpenCMS.Infrastructure.Common;
+using OpenCMS.Shared.Models;
+using OpenCMS.Shared.Models.InputModels;
 
 namespace OpenCMS.Controllers
 {
@@ -23,9 +25,9 @@ namespace OpenCMS.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(new PaginatedResponse<object>()
+            return Ok(new PaginatedBaseResponse<object>()
             {
-                Data = new PaginateItems<object>()
+                Data = new PaginatedBaseItems<object>()
                 {
                     Items = _inventoriesRepo.Fetch().ToList(),
                     Total = _inventoriesRepo.Fetch().Select(x => x.Id).Count()

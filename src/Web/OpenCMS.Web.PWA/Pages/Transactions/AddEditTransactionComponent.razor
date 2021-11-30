@@ -1,0 +1,136 @@
+﻿@page "/transactions/{TransactionType}/add-edit"
+@page "/transactions/{TransactionType}/add-edit/{TransactionId:int}"
+@inject NavigationManager _navigationManager
+@inject ITransactionService _saleService
+@inject ICardFilesService _cardFileService
+<ContentWrapper CurrentPage="@_currentPage" IsLoading="isLoading">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <EditForm Model="_model" OnValidSubmit="OnValidSubmit">
+                        <FluentValidationValidator></FluentValidationValidator>
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <SfComboBox CssClass="e-outline" FloatLabelType="FloatLabelType.Auto" TValue="int?" TItem="CardFilesModel"
+                                                    PopupHeight="230px" Placeholder="@(_transactionType == OpenCMS.Shared.Common.TransactionType.Sales ? "Select a customer" : "Select a vendor")" @bind-Value="@_model.CardFileId"
+                                                    DataSource="@_cardFiles"
+                                                    Readonly="@(TransactionId != null)">
+                                            <ComboBoxFieldSettings Text="FullName" Value="Id"></ComboBoxFieldSettings>
+                                        </SfComboBox>
+                                        <ValidationMessage For="@(()=>_model.CardFileId)"></ValidationMessage>
+                                    </div>
+                                </div>
+                                <div class="row margin-top-10">
+                                    <div class="col-12">
+                                        <SfNumericTextBox ShowSpinButton="false" Placeholder="Total Amount" CssClass="e-outline" FloatLabelType="FloatLabelType.Auto" TValue="decimal?" Readonly="true" @bind-Value="_model.TotalAmount">
+
+                                        </SfNumericTextBox>
+                                        <ValidationMessage For="@(()=>_model.HasItems)"></ValidationMessage>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        @if (_model.Id == 0)
+                                        {
+                                            <SfComboBox CssClass="e-outline" FloatLabelType="FloatLabelType.Auto"
+                                                        TValue="int" TItem="EnumModel"
+                                                        PopupHeight="230px" Placeholder="Select Transaction Status"
+                                                        DataSource="@_transactionStatus"
+                                                        @bind-Value="_model.Status">
+                                                <ComboBoxFieldSettings Text="Text" Value="Id"></ComboBoxFieldSettings>
+                                            </SfComboBox>
+                                            <ValidationMessage For="@(() => _model.Status)"></ValidationMessage>
+                                        }
+                                        @if (_model.Status != 0)
+                                        {
+                                            @if (_model.Status == (int)TransactionStatus.Quotation)
+                                            {
+                                                <SfButton IsPrimary="true" type="button">
+                                                    <span class="fas fa-truck-moving"></span>
+                                                    Move to Order
+                                                </SfButton>
+                                            }
+                                            @if (_model.Status == (int)TransactionStatus.Order)
+                                            {
+                                                <SfButton IsPrimary="true" type="button" OnClick="OnButtonMakePaymentClick">
+                                                    <i class="fas fa-money-check"></i>
+                                                    Make Payment
+                                                </SfButton>
+                                            }
+                                        }
+                                        @if (_model.Status != (int)TransactionStatus.Invoice)
+                                        {
+                                            <div class="row" style="margin-top: 5px">
+                                                <div class="col-lg-12">
+                                                    <SfButton type="submit" IsPrimary="true">
+                                                        <span class="fas fa-save"></span>
+                                                        @(_model?.Id == 0? "Save":"Update")
+                                                    </SfButton>
+                                                </div>
+                                            </div>
+                                        }
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+
+                                @*                <SfProgressButton Content="Save" CssClass="float-right" IsPrimary="true" IconCss="fa fa-save">
+                                        <ProgressButtonSpinSettings Position="SpinPosition.Left"></ProgressButtonSpinSettings>
+                                    </SfProgressButton>*@
+                            </div>
+                        </div>
+                    </EditForm>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <SfGrid DataSource="_dataSource" AllowPaging="true" AllowFiltering="true">
+                                <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
+                                <GridPageSettings PageSizes="true" PageSize="10"></GridPageSettings>
+                                <GridColumns>
+                                    <GridColumn HeaderText="Manage Records" Width="150" Visible="_model.Status!=(int)TransactionStatus.Invoice">
+                                        <HeaderTemplate>
+                                            <SfButton IsPrimary="true" IconCss="fas fa-plus-square" OnClick="@(() => ShowAddEditDialog(new TransactionItemModel() {IsNew = true}))"></SfButton>
+                                        </HeaderTemplate>
+                                        <Template>
+                                            <SfButton OnClick="@(() => ShowAddEditDialog(context as TransactionItemModel))" IconCss="fas fa-edit"></SfButton>
+                                            <SfButton OnClick="@(() => DeleteItem(context as TransactionItemModel))" IconCss="fas fa-trash"></SfButton>
+                                        </Template>
+                                    </GridColumn>
+
+                                    <GridColumn Field="Catalogs.Name" HeaderText="Catalog Name"></GridColumn>
+                                    <GridColumn Field="Quantity" HeaderText="Quantity" Format="n2"></GridColumn>
+                                    <GridColumn Field="SubTotal" HeaderText="Sub Total" Format="n2"></GridColumn>
+
+                                </GridColumns>
+                            </SfGrid>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <AddEditTransactionItemComponent transactionType="TransactionType" ShowDialog="_showDialog" OnDialogClose="onDialogClose" Model="_salesItemModel" OnSave="OnSaleItemSave"></AddEditTransactionItemComponent>
+    @if (_model.Id != 0)
+    {
+        <TransactionMakePaymentDialogComponent TransactionModel="_model" ShowDialog="_showMakePaymentDialog "></TransactionMakePaymentDialogComponent>
+    }
+
+</ContentWrapper>
+@code {
+    private bool _showMakePaymentDialog = false;
+
+    private void OnButtonMakePaymentClick()
+    {
+
+        _showMakePaymentDialog = true;
+    }
+
+}
+

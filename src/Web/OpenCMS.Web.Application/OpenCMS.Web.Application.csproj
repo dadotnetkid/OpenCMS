@@ -5,6 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Interfaces\IAccountsService.cs" />
+    <Compile Remove="Interfaces\ICatalogsService.cs" />
+    <Compile Remove="Services\AccountsService.cs" />
+    <Compile Remove="Services\CardFilesService.cs" />
+    <Compile Remove="Services\CatalogsService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components" Version="5.0.7" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
     <PackageReference Include="Microsoft.JSInterop" Version="5.0.7" />
@@ -15,6 +23,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OpenCMS.Web.Infrastructure\OpenCMS.Web.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.Extensions.Configuration.Abstractions">
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\5.0.0\ref\net5.0\Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

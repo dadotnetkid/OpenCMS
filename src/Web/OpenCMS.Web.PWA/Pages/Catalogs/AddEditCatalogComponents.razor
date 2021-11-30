@@ -6,12 +6,12 @@
         <Content>
             <SfTab CssClass="BlazorTab" LoadOn="ContentLoad.Init">
                 <TabItems>
-                    <TabItem >
+                    <TabItem>
                         <ChildContent>
                             <TabHeader Text="Profile"></TabHeader>
                         </ChildContent>
                         <ContentTemplate>
-                            <CatalogProfileComponent Model="Model" Accounts="_accounts" OnModelChange="OnModelChange" />
+                            <CatalogProfileComponent OnDialogClose="OnDialogClose" Model="Model" Accounts="_accounts" OnModelChange="OnModelChange" />
                         </ContentTemplate>
                     </TabItem>
                     <TabItem Disabled="!Model.IBuyThisItem">
@@ -19,9 +19,9 @@
                             <TabHeader Text="Buying Details"></TabHeader>
                         </ChildContent>
                         <ContentTemplate>
-                            <BuyingDetailsComponent Model="@Model.BuyingDetails" Accounts="_accounts" OnModelChange="@OnModelChange"></BuyingDetailsComponent>
+                            <BuyingDetailsComponent Model="@Model.BuyingDetails" Accounts="_accounts" OnDialogClose="OnDialogClose"  OnModelChange="@OnModelChange"></BuyingDetailsComponent>
                         </ContentTemplate>
-                    </TabItem> 
+                    </TabItem>
                     <TabItem Disabled="!Model.ISellThisItem">
                         <ChildContent>
                             <TabHeader Text="Selling Details"></TabHeader>
@@ -33,7 +33,7 @@
                 </TabItems>
 
             </SfTab>
-          
+
         </Content>
     </DialogTemplates>
     <DialogEvents Closed="@DialogClose" OnOpen="OnDialogOpen"></DialogEvents>
@@ -42,13 +42,14 @@
     </DialogButtons>
 </SfDialog>
 @code {
-    [Parameter]public bool ShowDialog { get; set; }
-    [Parameter]public CatalogModel Model { get; set; }
+    [Parameter] public bool ShowDialog { get; set; }
+    [Parameter] public CatalogModel Model { get; set; }
+    [Parameter] public EventCallback<bool> OnDialogClose { get; set; }
     private FluentValidationValidator _fluentValidationValidator;
     private List<AccountsModel> _accounts = new();
     private void DialogClose()
     {
-        throw new NotImplementedException();
+        ShowDialog = false;
     }
 
 
@@ -57,15 +58,14 @@
     {
         if (!_accounts.Any())
         {
-            _accounts= await _accountService.GetAll();
-
+            var accounts = await _accountService.GetAll();
+            _accounts = accounts.Data;
         }
     }
 
     private void OnModelChange(CatalogModel model)
     {
         Model = model;
-        Console.WriteLine("hello");
         StateHasChanged();
     }
 

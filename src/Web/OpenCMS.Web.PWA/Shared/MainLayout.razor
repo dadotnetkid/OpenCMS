@@ -1,9 +1,11 @@
 ﻿@inherits LayoutComponentBase
-    <MudDialogProvider />
+
 <div class="wrapper">
     <TopNav></TopNav>
     <NavMenu></NavMenu>
     <div class="content-wrapper">
+        <MudBlazor.MudDialogProvider/>
+        <MudBlazor.MudThemeProvider/>
         @Body
     </div>
     <footer class="main-footer">

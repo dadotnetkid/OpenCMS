@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace OpenCMS.Domain.Models
+namespace OpenCMS.Shared.Models
 {
     public class AccountModel
     {
@@ -24,5 +20,6 @@ namespace OpenCMS.Domain.Models
         public int ClassificationNumber { get; set; }
         public DateTime CreatedOnUtc{ get; set; }
         public DateTime UpdateOnUtc { get; set; }
+        public ClassificationModel Classifications { get; set; }
     }
 }

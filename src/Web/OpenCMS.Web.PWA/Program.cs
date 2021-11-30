@@ -14,6 +14,9 @@ using OpenCMS.Web.Application.Interfaces;
 using OpenCMS.Web.Application.Services;
 using Syncfusion.Blazor;
 using MudBlazor.Services;
+using OpenCMS.ApiClient;
+using OpenCMS.ApiClient.Interfaces;
+
 namespace OpenCMS.Web.PWA
 {
     public class Program
@@ -27,16 +30,15 @@ namespace OpenCMS.Web.PWA
             builder.Services.AddScoped<ILocalStorageService, LocalStorageService>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IAgentsService, AgentsService>();
-            builder.Services.AddScoped<ICardFilesService, CardFilesService>();
-            builder.Services.AddScoped<IAccountsService, AccountsService>();
-            builder.Services.AddScoped<ICatalogsService, CatalogsService>();
             builder.Services.AddScoped<IPdfViewerService, PdfViewerService>();
             builder.Services.AddScoped<ITransactionService, TransactionService>();
             builder.Services.AddScoped<ITestService, TestService>();
-            builder. Services.AddTransient<IValidator<TransactionItemModel>, SalesItemsValidators>();
-            builder. Services.AddTransient<IValidator<CardFilesModel>, CardFilesValidator>();
-            builder.Services.AddMudServices();
+            builder.Services.AddTransient<IValidator<TransactionItemModel>, SalesItemsValidators>();
+            builder.Services.AddTransient<IValidator<CardFilesModel>, CardFilesValidator>();
+            builder.Services.AddTransient<IValidator<PaymentsModel>, TransactionMakePaymentValidator>();
+
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddScoped<ISfDataManagerService, SfDataManagerService>();
             builder.Services.AddHttpClient("OpenCMS", c =>
             {
                 var config = builder.Configuration;
@@ -50,7 +52,8 @@ namespace OpenCMS.Web.PWA
             });
             builder.Services.AddScoped<IOpenCMSHttpClient, OpenCMSHttpClient>();
             builder.Services.AddSyncfusionBlazor();
-
+            builder.Services.AddMudServices();
+            builder.RegisterRefit();
             var host = builder.Build();
             var userService = host.Services.GetRequiredService<IUserService>();
 

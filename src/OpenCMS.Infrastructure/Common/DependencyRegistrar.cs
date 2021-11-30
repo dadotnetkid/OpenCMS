@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using OpenCMS.Application.EventHandlers;
 using OpenCMS.Application.Interfaces.Repository;
 using OpenCMS.Application.Interfaces.Services;
 using OpenCMS.Application.Repository;
@@ -24,7 +26,8 @@ namespace OpenCMS.Infrastructure.Common
             services.AddScoped<IPasswordHasher<Users>, PasswordHasher<Users>>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<ISalesService, SalesService>();
+            services.AddScoped<ITransactionService, TransactionService>();
+            services.AddMediatR(typeof(UpdateLastCostHandler));
         }
     }
 }

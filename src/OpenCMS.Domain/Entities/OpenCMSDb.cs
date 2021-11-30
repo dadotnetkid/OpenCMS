@@ -25,19 +25,25 @@ namespace OpenCMS.Domain.Entities
         public DbSet<CatalogBuyingDetails> CatalogBuyingDetails { get; set; }
         public DbSet<CatalogSellingDetails> CatalogSellingDetails { get; set; }
         public DbSet<Tenants> Tenants { get; set; }
-        
+        public DbSet<Classifications> Classifications { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<Classifications>(e =>
+            {
+                e.HasKey(x => x.Id);
+                e.HasMany(x => x.Accounts).WithOne(x => x.Classifications).HasForeignKey(x => x.ClassificationId)
+                    .OnDelete(DeleteBehavior.SetNull);
+            });
             builder.Entity<Transactions>(e =>
             {
                 e.HasKey(x => x.Id);
                 e.HasMany(x => x.SalesItems)
                     .WithOne(x => x.Sales)
-                    .HasForeignKey(x => x.SalesId)
+                    .HasForeignKey(x => x.TransactionId)
                     .OnDelete(DeleteBehavior.Cascade);
                 e.HasOne(x => x.CardFile).WithMany().HasForeignKey(x => x.CardFileId).OnDelete(DeleteBehavior.Cascade);
             });
@@ -53,8 +59,8 @@ namespace OpenCMS.Domain.Entities
             builder.Entity<Catalogs>(e =>
             {
                 e.HasKey(k => k.Id);
-                e.HasMany(x => x.CatalogBuyingDetails).WithOne().HasForeignKey(x => x.CatalogId);
-                e.HasMany(x => x.CatalogSellingDetails).WithOne().HasForeignKey(x => x.CatalogId);
+                e.HasMany(x => x.CatalogBuyingDetails).WithOne(x=>x.Catalog).HasForeignKey(x => x.CatalogId);
+                e.HasMany(x => x.CatalogSellingDetails).WithOne(x => x.Catalog).HasForeignKey(x => x.CatalogId);
             });
             builder.Entity<Accounts>(e =>
             {

@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using OpenCMS.Application.Interfaces.Repository;
 using OpenCMS.Domain.Entities;
 using OpenCMS.Infrastructure.Common;
+using OpenCMS.Shared.Models;
+using OpenCMS.Shared.Models.InputModels;
 
 namespace OpenCMS.Controllers
 {
@@ -28,9 +30,9 @@ namespace OpenCMS.Controllers
             try
             {
                 return Ok(
-                    new PaginatedResponse<object>()
+                    new PaginatedBaseResponse<object>()
                     {
-                        Data = new PaginateItems<object>
+                        Data = new PaginatedBaseItems<object>
                         {
                             Items = _repository.GetAll(),
                             Total = _repository.GetAll().Count()

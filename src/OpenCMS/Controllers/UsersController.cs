@@ -10,6 +10,8 @@ using OpenCMS.Application.Interfaces.Services;
 using OpenCMS.Domain.Entities;
 using OpenCMS.Domain.Models;
 using OpenCMS.Infrastructure.Common;
+using OpenCMS.Shared.Models;
+using OpenCMS.Shared.Models.InputModels;
 using OpenCMS.Shared.Models.Models;
 
 namespace OpenCMS.Controllers
@@ -49,10 +51,10 @@ namespace OpenCMS.Controllers
                     x.LastName,
                     userRoles = x.Roles.Select(r => new { r.Id, r.Role })
                 });
-            return Ok(new PaginatedResponse<object>()
+            return Ok(new PaginatedBaseResponse<object>()
             {
 
-                Data = new PaginateItems<object>()
+                Data = new PaginatedBaseItems<object>()
                 {
                     Items = users.ToList(),
                     Total = users.Select(x => x.Id).Count()

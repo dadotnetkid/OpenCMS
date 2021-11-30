@@ -12,53 +12,53 @@ using OpenCMS.Shared.Models.InputModels;
 
 namespace OpenCMS.Application.Services
 {
-    public class SalesService : ISalesService
+    public class TransactionService : ITransactionService
     {
-        private readonly IRepository<Transactions, int> _salesRepo;
-        private readonly IRepository<TransactionItems, int> _salesItemsRepo;
+        private readonly IRepository<Transactions, int> _transactionRepo;
+        private readonly IRepository<TransactionItems, int> _transactionItemsRepo;
         private readonly IMapper _mapper;
 
-        public SalesService(IRepository<Transactions, int> salesRepo, IRepository<TransactionItems, int> salesItemsRepo, IMapper mapper)
+        public TransactionService(IRepository<Transactions, int> transactionRepo, IRepository<TransactionItems, int> transactionItemsRepo, IMapper mapper)
         {
-            _salesRepo = salesRepo;
-            _salesItemsRepo = salesItemsRepo;
+            _transactionRepo = transactionRepo;
+            _transactionItemsRepo = transactionItemsRepo;
             _mapper = mapper;
         }
         public async Task<TransactionModel> CreateOrUpdate(CreateOrUpdateTransactionInputModel inputModel)
         {
             if (inputModel.SalesModel.Id == 0)
             {
-                inputModel = await CreateSales(inputModel);
+                inputModel = await CreateTransaction(inputModel);
             }
             else
             {
-                inputModel = await UpdateSales(inputModel);
+                inputModel = await UpdateTransaction(inputModel);
             }
             return inputModel.SalesModel;
         }
 
-        private async Task<CreateOrUpdateTransactionInputModel> UpdateSales(CreateOrUpdateTransactionInputModel inputModel)
+        private async Task<CreateOrUpdateTransactionInputModel> UpdateTransaction(CreateOrUpdateTransactionInputModel inputModel)
         {
             try
             {
                 foreach (var i in inputModel.SalesItemModels)
                 {
 
-                    i.SalesId = inputModel.SalesModel.Id;
+                    i.TransactionId = inputModel.SalesModel.Id;
                     var item = _mapper.Map<TransactionItems>(i);
                     if (i.IsNew)
                     {
-                        await _salesItemsRepo.Insert(item);
+                        await _transactionItemsRepo.Insert(item);
                     }
                     else if (i.IsModified)
                     {
-                     
-                        await _salesItemsRepo.Update(item);
+
+                        await _transactionItemsRepo.Update(item);
                     }
                 }
                 inputModel.SalesModel.CardFile = null;
                 var sales = _mapper.Map<Transactions>(inputModel.SalesModel);
-                await _salesRepo.Update(sales);
+                await _transactionRepo.Update(sales);
                 return inputModel;
             }
             catch (Exception e)
@@ -68,17 +68,21 @@ namespace OpenCMS.Application.Services
             }
         }
 
-        private async Task<CreateOrUpdateTransactionInputModel> CreateSales(CreateOrUpdateTransactionInputModel inputModel)
+        private async Task<CreateOrUpdateTransactionInputModel> CreateTransaction(CreateOrUpdateTransactionInputModel inputModel)
         {
 
             var sales = _mapper.Map<Transactions>(inputModel.SalesModel);
             sales.DateCreated = DateTime.Now;
-            sales = await _salesRepo.Insert(sales);
+            long maxTransaction = 0;
+            if (_transactionRepo.Fetch().Any())
+                maxTransaction = _transactionRepo.Fetch().Max(x => x.TransactionNumber);
+            sales.TransactionNumber = maxTransaction + 1;
+            sales = await _transactionRepo.Insert(sales);
             foreach (var i in inputModel.SalesItemModels)
             {
-                i.SalesId = sales.Id;
+                i.TransactionId = sales.Id;
                 var item = _mapper.Map<TransactionItems>(i);
-                await _salesItemsRepo.Insert(item);
+                await _transactionItemsRepo.Insert(item);
 
             }
             return inputModel;

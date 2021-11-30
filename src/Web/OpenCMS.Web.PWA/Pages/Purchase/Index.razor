@@ -25,9 +25,10 @@
                             </TabItem>
                         </TabItems>
                     </SfTab>
-                    <SfGrid DataSource="dataSource" AllowPaging="true" AllowFiltering="true">
+                    <SfGrid @ref="@GridView" DataSource="dataSource" AllowPaging="true" AllowFiltering="true" >
                         <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
-                        <GridPageSettings PageSizes="true" PageSize="10"></GridPageSettings>
+                        
+                        <GridPageSettings PageSizes="true" PageSize="10" ></GridPageSettings>
                         <GridColumns>
                             <GridColumn HeaderText="Manage Records" Width="150">
                                 <HeaderTemplate>
@@ -43,6 +44,7 @@
                             <GridColumn Field="DateCreated" Format="MM/dd/yyyy"></GridColumn>
 
                         </GridColumns>
+                        <SfSpinner Visible="true" ></SfSpinner>
                     </SfGrid>
                 </div>
             </div>
@@ -50,15 +52,18 @@
     </div>
 </ContentWrapper>
 @code {
+    private SfGrid<List<TransactionModel>> GridView;
     private List<TransactionModel> dataSource = new();
     protected override async Task OnInitializedAsync()
     {
-        var res = await _transactionService.Get(TransactionTypes.Purchase);
+        await GridView.ShowSpinnerAsync();
+        var res = await _transactionService.Get(TransactionType.Purchases);
         if (res.HttpStatusCode == System.Net.HttpStatusCode.OK)
         {
             var source = res as BaseResponse<List<TransactionModel>>;
             dataSource = source.Data;
         }
+        await GridView.HideSpinnerAsync();
     }
 
 

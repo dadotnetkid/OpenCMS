@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
+﻿using System.Net;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
-namespace OpenCMS.Infrastructure.Common
+namespace OpenCMS.Shared.Models.InputModels
 {
     partial interface IBaseResponse
     {

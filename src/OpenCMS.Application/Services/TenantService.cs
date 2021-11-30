@@ -24,7 +24,10 @@ namespace OpenCMS.Application.Services
         {
             var context = _httpContextAccessor;
             var _apiKey = context.HttpContext.Request.Headers["ApiKey"].ToString();
+            if (string.IsNullOrEmpty(_apiKey))
+                return 0;
             var apiKey = Encoding.UTF8.GetString(Convert.FromBase64String(_apiKey)).Split(":").ToList();
+         
             var domain = context.HttpContext.Request.Headers["Domain"].ToString();
             var key = apiKey[0];
             var secret = apiKey[1];

@@ -14,12 +14,20 @@
     </div>
 </section>
 <section class="content">
-    @ChildContent
+
+    @if (IsLoading)
+    {
+        <SfSpinner Size="40" Label="Loading" Type="SpinnerType.Bootstrap" Visible="true"></SfSpinner>
+    }
+    else
+    {
+        @ChildContent
+    }
 </section>
 
 @code{
 
     [Parameter] public RenderFragment ChildContent { get; set; }
     [Parameter]public string CurrentPage { get; set; }
-
+    [Parameter] public bool IsLoading { get; set; } = false;
 }

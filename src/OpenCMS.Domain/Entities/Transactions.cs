@@ -14,13 +14,15 @@ namespace OpenCMS.Domain.Entities
         }
 
         public int Id { get; set; }
-        public int? CardFileId { get; set; }
-        public decimal? TotalAmount { get; set; }
+        public long TransactionNumber { get; set; }
+        public int CardFileId { get; set; }
+        public decimal TotalAmount { get; set; }
         public decimal? Discount { get; set; }
-        public int? Status { get; set; }
+        public int Status { get; set; }
+        public int TransactionType { get; set; }
         public DateTime? DateCreated { get; set; }
         public virtual CardFiles CardFile { get; set; }
         public virtual ICollection<TransactionItems> SalesItems { get; set; }
-        public int TransactionType { get; set; }
+        
     }
 }

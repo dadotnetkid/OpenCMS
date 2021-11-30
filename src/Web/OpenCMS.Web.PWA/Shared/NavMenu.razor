@@ -34,6 +34,15 @@
                 </li>
                 <li class="nav-item">
 
+                    <NavLink class="nav-link" href="/chart-of-accounts" Match="NavLinkMatch.All">
+                        <i class="nav-icon fas fa-address-book"></i>
+                        <p>
+                            Chart of Accounts
+                        </p>
+                    </NavLink>
+                </li>
+                <li class="nav-item">
+
                     <NavLink class="nav-link" href="/card-files" Match="NavLinkMatch.All">
                         <i class="nav-icon fas fa-address-card"></i>
                         <p>
@@ -50,15 +59,7 @@
                         </p>
                     </NavLink>
                 </li>
-                <li class="nav-item">
-
-                    <NavLink class="nav-link" href="/purchases" Match="NavLinkMatch.Prefix">
-                        <i class="nav-icon fas fa-cart-plus"></i>
-                        <p>
-                            Purchases
-                        </p>
-                    </NavLink>
-                </li>
+               
                 <li class="nav-item">
 
                     <NavLink class="nav-link" href="/inventory" Match="NavLinkMatch.All">
@@ -68,15 +69,12 @@
                         </p>
                     </NavLink>
                 </li>
-                <li class="nav-item">
+               
+                <TreeViewMenu CssClass="fas fa-cart-plus" NavLabel="Transaction">
+                    <TreeViewMenuItem CssIcon="fas fa-cart-plus" Label="Purchases" href="/transactions/purchases" Match="NavLinkMatch.All"></TreeViewMenuItem>
+                    <TreeViewMenuItem CssIcon="fas fa-cart-plus" Label="Sales" href="/transactions/sales" Match="NavLinkMatch.All"></TreeViewMenuItem>
 
-                    <NavLink class="nav-link" href="/sales" Match="NavLinkMatch.Prefix">
-                        <i class="nav-icon fas fa-cart-plus"></i>
-                        <p>
-                            Sales
-                        </p>
-                    </NavLink>
-                </li>
+                </TreeViewMenu>
                 <TreeViewMenu CssClass="fas fa-cogs" NavLabel="Maintenance">
                     <TreeViewMenuItem CssIcon="fa fa-user" Label="Users" href="/settings/users" Match="NavLinkMatch.All"></TreeViewMenuItem>
                     <TreeViewMenuItem CssIcon="fa fa-user" Label="Roles" href="/settings/roles" Match="NavLinkMatch.All"></TreeViewMenuItem>

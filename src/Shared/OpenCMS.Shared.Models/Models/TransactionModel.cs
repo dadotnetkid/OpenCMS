@@ -17,9 +17,10 @@ namespace OpenCMS.Shared.Models
         [JsonPropertyName("totalAmount")]
         public decimal? TotalAmount { get; set; }
         public decimal? Discount { get; set; }
-        public int? Status { get; set; }
-        [JsonPropertyName("transactionTypes")]
-        public TransactionTypes TransactionTypes { get; set; }
+        [JsonPropertyName("status")]
+        public int Status { get; set; }
+        [JsonPropertyName("transactionType")]
+        public TransactionType TransactionType { get; set; }
         [JsonPropertyName("dateCreated")]
         public DateTime? DateCreated { get; set; }
         public int? TenantId { get; set; }
@@ -27,6 +28,7 @@ namespace OpenCMS.Shared.Models
         public virtual CardFilesModel CardFile{ get; set; }
         [JsonPropertyName("transactionItems")]
         public virtual ICollection<TransactionItemModel> TransactionItems { get; set; }
-        
+
+        public bool? HasItems { get; set; }
     }
 }

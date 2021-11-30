@@ -9,7 +9,7 @@ namespace OpenCMS.Domain.Entities
     public partial class TransactionItems:BaseEntity<int>
     {
         public int Id { get; set; }
-        public int? SalesId { get; set; }
+        public int? TransactionId { get; set; }
         public int? CatalogId { get; set; }
         public decimal? Quantity { get; set; }
         public int? DiscountId { get; set; }

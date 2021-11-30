@@ -1,9 +1,11 @@
-﻿@page "/sales"
+﻿@page "/transactions/{TransactionTypes}"
 @using Newtonsoft.Json
-@inject ITransactionService _saleService
+@using SelectEventArgs = Syncfusion.Blazor.Navigations.SelectEventArgs
+@inject MudBlazor.IDialogService _dialogService
+@inject ITransactionService _transactionService
 @inject NavigationManager _navigationManager
 @attribute [Authorize]
-<ContentWrapper CurrentPage="Sales">
+<ContentWrapper CurrentPage="@(TransactionTypes[0].ToString().ToUpper() + TransactionTypes.Substring(1))">
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
@@ -24,8 +26,9 @@
                                 </TabHeader>
                             </TabItem>
                         </TabItems>
+                        <TabEvents Selected="OnTransactionStatusChange"></TabEvents>
                     </SfTab>
-                    <SfGrid DataSource="dataSource" AllowPaging="true" AllowFiltering="true">
+                    <SfGrid @ref="GridView" DataSource="dataSource" AllowPaging="true" AllowFiltering="true">
                         <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
                         <GridPageSettings PageSizes="true" PageSize="10"></GridPageSettings>
                         <GridColumns>
@@ -35,7 +38,7 @@
                                 </HeaderTemplate>
                                 <Template>
                                     <SfButton OnClick="@(() => ShowAddEditDialog(context as TransactionModel))" IconCss="fas fa-edit"></SfButton>
-                                    <SfButton OnClick="@(() => ShowAddEditDialog(context as TransactionModel))" IconCss="fas fa-trash"></SfButton>
+                                    <SfButton OnClick="@(() => DeleteSales (context as TransactionModel))" IconCss="fas fa-trash"></SfButton>
                                 </Template>
                             </GridColumn>
                             <GridColumn Field="CardFile.FullName" HeaderText="Customer Name"></GridColumn>
@@ -43,6 +46,7 @@
                             <GridColumn Field="DateCreated" Format="MM/dd/yyyy"></GridColumn>
 
                         </GridColumns>
+                        <SfSpinner Size="40" Type="SpinnerType.Bootstrap"  Visible="@isLoading"></SfSpinner>
                     </SfGrid>
                 </div>
             </div>
@@ -50,28 +54,67 @@
     </div>
 </ContentWrapper>
 @code {
+    [Parameter] public string TransactionTypes { get; set; }
     private List<TransactionModel> dataSource = new();
+    private SfGrid<TransactionModel> GridView;
+    private bool isLoading;
+    protected override async Task OnParametersSetAsync()
+    {
+        await GetAll();
+    }
+
     protected override async Task OnInitializedAsync()
     {
-        var res = await _saleService.Get();
+        await GetAll();
+        StateHasChanged();
+    }
+
+    private async Task GetAll(TransactionStatus transactionStatus = TransactionStatus.Quotation)
+    {
+        isLoading = true;
+        var transType = Enum.Parse<TransactionType>(TransactionTypes, ignoreCase: true);
+        var res = await _transactionService.Get(transType, transactionStatus: transactionStatus);
         if (res.HttpStatusCode == System.Net.HttpStatusCode.OK)
         {
             var source = res as BaseResponse<List<TransactionModel>>;
             dataSource = source.Data;
+
         }
+        isLoading = false;
     }
-
-
     private void ShowAddEditDialog(TransactionModel context)
     {
         Console.WriteLine(context.Id);
         if (context.Id == 0)
         {
-            _navigationManager.NavigateTo("sales/add-edit-sales");
+            _navigationManager.NavigateTo($"transactions/{TransactionTypes}/add-edit");
             return;
         }
-        _navigationManager.NavigateTo("sales/add-edit-sales/"+context.Id);
+        _navigationManager.NavigateTo($"transactions/{TransactionTypes}/add-edit/" + context.Id);
     }
+
+    private async Task DeleteSales(TransactionModel context)
+    {
+        bool? result = await _dialogService.ShowMessageBox(
+            "Warning",
+            "Deleting can not be undone!",
+            yesText: "Delete!", cancelText: "Cancel");
+        var res = await _transactionService.Delete(context.Id);
+        if (res.HttpStatusCode == System.Net.HttpStatusCode.OK)
+        {
+            if (res is BaseResponse<List<TransactionModel>> item)
+            {
+                dataSource = item.Data;
+            }
+        }
+    }
+
+
+    private async Task OnTransactionStatusChange(SelectEventArgs obj)
+    {
+        await GetAll((TransactionStatus) (obj.SelectedIndex + 1));
+    }
+
 
 }
 

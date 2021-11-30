@@ -84,7 +84,7 @@ namespace OpenCMS.Web.Application.Services
                 TokenResponse = token;
             }
         }
-        private async Task<TokenResponse> GetTokenResponse()
+        public async Task<TokenResponse> GetTokenResponse()
         {
             var token = await _localStorageService.GetItem<TokenResponse>("Token");
 

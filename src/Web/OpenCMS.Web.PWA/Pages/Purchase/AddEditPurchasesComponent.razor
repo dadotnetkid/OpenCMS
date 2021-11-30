@@ -84,7 +84,7 @@
         _cardFiles = cardFiles.Data.Items;
         if (SaleId != null)
         {
-            var _sales = await _transactionService.GetById(SaleId.Value, transactionType: TransactionTypes.Purchase);
+            var _sales = await _transactionService.GetById(SaleId.Value, transactionType: TransactionTypes.Purchases);
             if (_sales is BaseResponse<TransactionModel> item)
             {
                 _model = item.Data;
@@ -117,7 +117,7 @@
             _dataSource.Remove(context);
             return;
         }
-        var _salesItems = await _transactionService.DeleteSalesItems(context.SalesId ?? 0, context.Id);
+        var _salesItems = await _transactionService.DeleteSalesItems(context.TransactionId ?? 0, context.Id);
         if (_salesItems is BaseResponse<List<TransactionItemModel>> salesItems)
         {
             _dataSource = new ObservableCollection<TransactionItemModel>(salesItems.Data);
@@ -148,7 +148,7 @@
 
     private async Task OnValidSubmit()
     {
-        _model.TransactionTypes = TransactionTypes.Purchase;
+        _model.TransactionTypes = TransactionTypes.Purchases;
         var res = await _transactionService.CreateOrUpdate(_model, _dataSource);
         if (res.HttpStatusCode == System.Net.HttpStatusCode.OK)
         {
