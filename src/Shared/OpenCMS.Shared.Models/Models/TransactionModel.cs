@@ -17,8 +17,7 @@ namespace OpenCMS.Shared.Models
         [JsonPropertyName("totalAmount")]
         public decimal? TotalAmount { get; set; }
         public decimal? Discount { get; set; }
-        [JsonPropertyName("status")]
-        public int Status { get; set; }
+        [JsonPropertyName("status")] public int Status { get; set; } = (int) TransactionStatus.Quotation;
         [JsonPropertyName("transactionType")]
         public TransactionType TransactionType { get; set; }
         [JsonPropertyName("dateCreated")]

@@ -1,0 +1,29 @@
+﻿<li class="nav-item has-treeview @show" >
+    <a class="nav-link" @onclick="@(toggleMenu)">
+        <i class="nav-icon @CssClass"></i>
+        <p>
+            @NavLabel
+            <i class="right fas fa-angle-left"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        @ChildContent
+    </ul>
+</li>
+
+
+
+@code{
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter]public string NavLabel { get; set; }
+    [Parameter] public string CssClass { get; set; }
+    private string show;
+
+    private void toggleMenu()
+    {
+        show = string.IsNullOrEmpty(show) ? "menu-open" : "";
+
+        Console.WriteLine(show);
+    }
+
+}

@@ -1,0 +1,43 @@
+﻿
+@inject IJSRuntime _jsRuntime
+<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button" @onclick="collapseSideBar"><i class="fas fa-bars"></i></a>
+        </li>
+    </ul>
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item dropdown user-menu " @onclick="showUserMenu" style="">
+            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                <img src="/css/admin-lte/img/avatar3.png" class="user-image img-circle elevation-2" alt="User Image">
+            </a>
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right @show" style="left: inherit; right: 0px; font-size: .800rem !important;">
+                <!-- User image -->
+                <a href="/member/member-profile">
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" @onclick="Logout">Sign out</a>
+            </div>
+        </li>
+    </ul>
+</nav>
+@code {
+
+    private void showUserMenu()
+    {
+        show = show == "" ? "show" : "";
+    }
+
+    private string show = "";
+
+    private async Task collapseSideBar()
+    {
+        await _jsRuntime.InvokeVoidAsync("collapseSideBar");
+    }
+
+    private async Task Logout()
+    {
+    }
+
+}

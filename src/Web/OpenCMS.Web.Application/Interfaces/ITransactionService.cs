@@ -19,5 +19,7 @@ namespace OpenCMS.Web.Application.Interfaces
         public Task<BaseResponse> DeleteSalesItems(int saleId,int salesItemId);
         public Task<BaseResponse> CreateOrUpdate(TransactionModel model, ObservableCollection<TransactionItemModel> salesItemModels);
         Task<BaseResponse> Delete(int transactionId);
+        Task<BaseResponse> MoveToOrder(int transactionId);
+        Task<BaseResponse> MakePayment(TransactionModel transactionModel, PaymentsModel paymentModel);
     }
 }

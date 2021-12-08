@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AutoMapper;
+using Newtonsoft.Json;
 using OpenCMS.Domain.Entities;
 using OpenCMS.Shared.Models;
-using OpenCMS.Web.Infrastructure.Models;
 
 namespace OpenCMS.Infrastructure.Mapper
 {
@@ -18,6 +19,20 @@ namespace OpenCMS.Infrastructure.Mapper
             MapCardFile();
             MapSales();
             MapChartOfAccount();
+            MapConfiguration();
+        }
+
+        private void MapConfiguration()
+        {
+            CreateMap<ConfigurationManagements, ConfigurationModel>();
+            CreateMap<ConfigurationManagements, HashConfigurationModel>()
+                .ForMember(x => x.HashConfiguration,
+                    src => src.MapFrom(s =>
+                        Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(s)))));
+            CreateMap<ConfigurationModel, HashConfigurationModel>()
+                .ForMember(x => x.HashConfiguration,
+                    src => src.MapFrom(s =>
+                        Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(s)))));
         }
 
         private void MapChartOfAccount()
@@ -29,9 +44,9 @@ namespace OpenCMS.Infrastructure.Mapper
         private void MapSales()
         {
             CreateMap<Transactions, TransactionModel>();
-            CreateMap<TransactionModel,Transactions>();
+            CreateMap<TransactionModel, Transactions>();
             CreateMap<TransactionItems, TransactionItemModel>();
-            CreateMap<TransactionItemModel,TransactionItems>();
+            CreateMap<TransactionItemModel, TransactionItems>();
         }
 
         private void MapCardFile()
@@ -45,7 +60,7 @@ namespace OpenCMS.Infrastructure.Mapper
         {
             CreateMap<CatalogSellingDetails, CatalogSellingDetailsModel>();
             CreateMap<CatalogBuyingDetails, CatalogBuyingDetailsModel>();
-            CreateMap<CatalogBuyingDetailsModel,CatalogBuyingDetails>();
+            CreateMap<CatalogBuyingDetailsModel, CatalogBuyingDetails>();
             CreateMap<Catalogs, CatalogModel>()
                 .ForMember(dest => dest.BuyingDetails, opt => opt.MapFrom(src => src.CatalogBuyingDetails.FirstOrDefault(x => x.IsActive)))
                 .ForMember(dest => dest.PreviousBuyingDetails, opt => opt.MapFrom(src => src.CatalogBuyingDetails.OrderBy(x => x.Id).FirstOrDefault()))

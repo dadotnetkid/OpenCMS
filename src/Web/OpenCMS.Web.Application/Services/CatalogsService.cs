@@ -6,7 +6,9 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using MudBlazor;
 using OpenCMS.Shared.Models;
+using OpenCMS.Web.Application.ApiClients;
 using OpenCMS.Web.Application.Interfaces;
 using OpenCMS.Web.Infrastructure.Models;
 
@@ -14,33 +16,24 @@ namespace OpenCMS.Web.Application.Services
 {
     public class CatalogsService : ICatalogsService
     {
-        private readonly IOpenCMSHttpClient _openCmsHttp;
+        private readonly ICatalogsApiClient _catalogsApiClient;
+        private readonly IDialogService _dialogService;
 
-        public CatalogsService(IOpenCMSHttpClient openCMSHttp)
+        public CatalogsService(ICatalogsApiClient catalogsApiClient,IDialogService dialogService)
         {
-            _openCmsHttp = openCMSHttp;
+            _catalogsApiClient = catalogsApiClient;
+            _dialogService = dialogService;
         }
-        public async Task<PaginatedBaseItems<List<CatalogModel>>> GetAll()
-        {
-            var http = _openCmsHttp.Create();
-            var items = await http.GetFromJsonAsync<PaginatedBaseResponse<List<CatalogModel>>>("catalogs");
-            return items.Data;
-        }
-
-        public async Task CreateOrUpdate(CatalogModel model)
-        {
-            var http = _openCmsHttp.Create();
-            var contentString = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-            var createOrUpdate = model.Id == 0 ? await http.PostAsync("catalogs", contentString)
-                : await http.PatchAsync("catalogs", contentString);
-            var content = await createOrUpdate.Content.ReadAsStringAsync();
-
-        }
+ 
 
         public async Task Delete(int contextId)
         {
-            var http = _openCmsHttp.Create();
-            await http.DeleteAsync($"catalogs/{contextId}");
+            var dialog=await _dialogService.ShowMessageBox("Delete this Catalog", "Do you want to delete this catalog", "Continue",
+                "Cancel");
+            if (dialog == true)
+            {
+                await _catalogsApiClient.Delete(contextId);
+            }
         }
     }
 }

@@ -1,0 +1,22 @@
+﻿@inherits LayoutComponentBase
+
+<div class="wrapper">
+    <TopNav></TopNav>
+    <NavMenu></NavMenu>
+    <div class="content-wrapper">
+        <MudBlazor.MudDialogProvider/>
+        <MudBlazor.MudThemeProvider/>
+        @Body
+    </div>
+    <footer class="main-footer">
+        <div class="float-right d-none d-sm-block">
+            <b>Version</b> 0.0.1
+        </div>
+        <strong>Copyright Mark Christopher Cacal </strong> All rights reserved.
+      
+    </footer>
+  
+
+    <aside class="control-sidebar control-sidebar-dark">
+    </aside>
+</div>

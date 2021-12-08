@@ -1,0 +1,89 @@
+﻿@page "/settings/users"
+
+@inject IUserService _userService
+@attribute [Authorize]
+<ContentWrapper CurrentPage="Users">
+    <div class="card">
+        <div class="card-header">
+            <h5>Users</h5>
+        </div>
+        <div class="card-body">
+            <SfGrid DataSource="dataSource" AllowPaging="true" AllowFiltering="true">
+                <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
+                <GridPageSettings PageSizes="true" PageSize="10"></GridPageSettings>
+                <GridColumns>
+                    <GridColumn HeaderText="Manage Records" Width="150">
+                        <HeaderTemplate>
+                            <SfButton IsPrimary="true" IconCss="fas fa-plus-square" OnClick="@(() => ShowAddEditDialog(new UserModel()))"></SfButton>
+                        </HeaderTemplate>
+                        <Template>
+                            <SfButton OnClick="@(() => ShowAddEditDialog(context as UserModel))" IconCss="fas fa-edit"></SfButton>
+                            <SfButton OnClick="@(() => ShowAddEditDialog(context as UserModel))" IconCss="fas fa-trash"></SfButton>
+                        </Template>
+                    </GridColumn>
+                    <GridColumn Field="@nameof(UserModel.FullName)"></GridColumn>
+                    <GridColumn Field="@nameof(UserModel.Email)"></GridColumn>
+                    <GridColumn Field="@nameof(UserModel.UserName)"></GridColumn>
+                    <GridColumn HeaderText="Roles" Width="10%">
+                        <Template>
+                            @{
+                                <div class="row">
+                                    <div class="col-12">
+                                        <SfChip>
+                                            <ChipItems>
+                                                <ChipItem Text="Apple" CssClass="e-primary" Enabled="true"></ChipItem>
+                                                <ChipItem Text="Microsoft" CssClass="e-info" Enabled="true"></ChipItem>
+                                                <ChipItem Text="Google" CssClass="e-success" Enabled="true"></ChipItem>
+                                                <ChipItem Text="Tesla" CssClass="e-warning" Enabled="true"></ChipItem>
+                                                <ChipItem Text="Intel" CssClass="e-danger" Enabled="true"></ChipItem>
+                                            </ChipItems>
+                                        </SfChip>
+                                    </div>
+                                </div>
+
+                            }
+                        </Template>
+                    </GridColumn>
+                </GridColumns>
+            </SfGrid>
+        </div>
+    </div>
+    <AddEditUserComponent ShowDialog="@showDialog" OnDialogClose="@onDialogClose" Model="UserModel"></AddEditUserComponent>
+</ContentWrapper>
+
+@code {
+    private List<UserModel> dataSource = new List<UserModel>();
+    private bool isLoading = true;
+    private bool showDialog { get; set; }
+    private UserModel UserModel { get; set; } = new();
+    protected override async Task OnInitializedAsync()
+    {
+
+        await GetAll();
+    }
+
+    private void ShowAddEditDialog(UserModel model)
+    {
+        UserModel = model;
+        showDialog = true;
+    }
+
+    private async Task Close(object e)
+    {
+        showDialog = false;
+        await GetAll();
+    }
+
+    private async Task GetAll()
+    {
+        var list = await _userService.GetAll();
+        dataSource = list.Items;
+        StateHasChanged();
+    }
+
+    private async void onDialogClose(string str)
+    {
+        showDialog = false;
+        await GetAll();
+    }
+}

@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using OpenCMS.Shared.Models;
-using OpenCMS.Web.Infrastructure.Models;
 using Refit;
 
-namespace OpenCMS.ApiClient.Interfaces
+namespace OpenCMS.Web.Application.ApiClients
 {
-    public interface ICatalogsService
+    public interface ICatalogsApiClient
     {
         [Get("/catalogs")]
         public Task<PaginatedBaseResponse<List<CatalogModel>>> GetAll();

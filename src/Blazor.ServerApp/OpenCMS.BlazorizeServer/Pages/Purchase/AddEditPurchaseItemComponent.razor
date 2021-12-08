@@ -1,0 +1,138 @@
+﻿@using ChangeEventArgs = Microsoft.AspNetCore.Components.ChangeEventArgs
+@inject ICatalogsService _catalogService
+<SfDialog Target="#target" Width="768px" AllowDragging="true" ShowCloseIcon="true" @bind-Visible="@ShowDialog">
+    <DialogPositionData Y="20px"></DialogPositionData>
+    <DialogTemplates>
+        <Header>@_modalTitle</Header>
+        <Content>
+            <EditForm Model="Model" OnValidSubmit="OnSubmit">
+                <FluentValidationValidator />
+                <div class="row margin-top-10">
+                    <div class="col-lg-6">
+                        <div class="row margin-top-10">
+                            <div class="col-lg-12">
+                                <SfComboBox CssClass="e-outline" FloatLabelType="FloatLabelType.Auto" TValue="int?" TItem="CatalogModel"
+                                            PopupHeight="230px" Placeholder="Select a Catalog" @bind-Value="@Model.CatalogId"
+                                            DataSource="@_catalogs">
+                                    <ComboBoxEvents TValue="int?" TItem="CatalogModel" ValueChange="OnCatalogValueChange"></ComboBoxEvents>
+                                    <ComboBoxFieldSettings Text="Name" Value="Id"></ComboBoxFieldSettings>
+                                </SfComboBox>
+                                <ValidationMessage For="@(()=>Model.CatalogId)"></ValidationMessage>
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-12">
+                                <SfNumericTextBox CssClass="e-outline" Enabled="true" Placeholder="Last Cost" FloatLabelType="FloatLabelType.Auto" TValue="decimal?" @bind-Value="_catalog.LastCost" Format="n2" />
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-12">
+                                <SfNumericTextBox Min="1" StrictMode="true" CssClass="e-outline" Enabled="true" Placeholder="Quantity" OnChange="OnQuantityChange" OnInput="@((e)=>OnQuantityValueChange(e))" FloatLabelType="FloatLabelType.Auto" TValue="decimal?" @bind-Value="Model.Quantity" Format="n2">
+                                </SfNumericTextBox>
+                                <ValidationMessage For="@(()=>Model.Quantity)"></ValidationMessage>
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-12">
+                                <SfNumericTextBox CssClass="e-outline" Enabled="false" Placeholder="Sub Total" FloatLabelType="FloatLabelType.Auto" TValue="decimal?" @bind-Value="Model.SubTotal" Format="n2">
+                                </SfNumericTextBox>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="row margin-top-10">
+                            <div class="col-lg-12">
+                                @if (_catalog?.Perishable == true)
+                                {
+                                    <SfDatePicker CssClass="e-outline" Placeholder="Sub Total" FloatLabelType="FloatLabelType.Auto" TValue="DateTime?" @bind-Value="Model.ExpiryDate" Format="MM/dd/yyyy">
+                                    </SfDatePicker>
+                                }
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 5px">
+                    <div class="col-lg-12">
+                        <SfButton type="submit">
+                            <span class="fas fa-save"></span>
+                            Save
+                        </SfButton>
+                    </div>
+                </div>
+            </EditForm>
+        </Content>
+    </DialogTemplates>
+    <DialogEvents Closed="@DialogClose" OnOpen="OnDialogOpen"></DialogEvents>
+    <DialogButtons>
+
+    </DialogButtons>
+</SfDialog>
+@code {
+    [Parameter] public bool ShowDialog { get; set; }
+    [Parameter] public EventCallback OnDialogClose { get; set; }
+    [Parameter] public EventCallback<TransactionItemModel> OnSave { get; set; }
+
+    [Parameter]
+    public TransactionItemModel Model { get; set; } = new();
+    private List<CatalogModel> _catalogs = new();
+    private CatalogModel _catalog = new();
+    private FluentValidationValidator _fluentValidationValidator;
+    private string _modalTitle;
+    private async Task DialogClose()
+    {
+
+        await OnDialogClose.InvokeAsync();
+    }
+
+    private async Task OnDialogOpen()
+    {
+        var catalogs = await _catalogService.GetAll();
+        _catalogs = catalogs.Items;
+
+        _catalog = Model?.Catalogs ?? new();
+        _modalTitle = Model?.Catalogs?.Name ?? "Add Purchase Item";
+        StateHasChanged();
+    }
+
+
+    private void OnCatalogValueChange(ChangeEventArgs<int?, CatalogModel> obj)
+    {
+
+        _catalog = obj?.ItemData ?? new();
+        Model.SubTotal = _catalog?.LastCost * Model.Quantity;
+        StateHasChanged();
+
+    }
+
+    private async Task OnSubmit()
+    {
+        Model.Catalogs = _catalog;
+        await OnSave.InvokeAsync(Model);
+    }
+
+
+    private void OnQuantityValueChange(ChangeEventArgs changeEventArgs)
+    {
+        if (string.IsNullOrEmpty(changeEventArgs.Value?.ToString()))
+            return;
+        Model.Quantity = Convert.ToDecimal(changeEventArgs.Value);
+        Model.SubTotal = _catalog.LastCost * Model.Quantity;
+        StateHasChanged();
+
+    }
+
+
+    private void OnQuantityChange(ChangeEventArgs obj)
+    {
+        if (obj.Value == null)
+            return;
+        Model.Quantity = Convert.ToDecimal(obj.Value ?? 0);
+        Model.SubTotal = _catalog.LastCost * (Model.Quantity);
+        StateHasChanged();
+    }
+
+
+}

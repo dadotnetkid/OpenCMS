@@ -6,12 +6,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using OpenCMS.ApiClient.Interfaces;
 using OpenCMS.Web.Application.Interfaces;
 using Refit;
-using IAccountsService = OpenCMS.ApiClient.Interfaces.IAccountsService;
 
-namespace OpenCMS.ApiClient
+namespace OpenCMS.Web.Application.ApiClients
 {
     public static class RegisterApiClient
     {
@@ -19,14 +17,18 @@ namespace OpenCMS.ApiClient
         {
             builder.Services.AddTransient<AuthHeaderHandler>();
             builder.Services
-                .AddRefitClient<IAccountsService>()
+                .AddRefitClient<IAccountsApiClient>()
                 .HttpBuilder(builder);
             builder.Services
-                .AddRefitClient<ICardFilesService>()
+                .AddRefitClient<ICardFilesApiClient>()
                 .HttpBuilder(builder)
                 .AddHttpMessageHandler<AuthHeaderHandler>();
             builder.Services
-                .AddRefitClient<ICatalogsService>()
+                .AddRefitClient<ICatalogsApiClient>()
+                .HttpBuilder(builder)
+                .AddHttpMessageHandler<AuthHeaderHandler>();
+            builder.Services
+                .AddRefitClient<ITransactionApiClient>()
                 .HttpBuilder(builder)
                 .AddHttpMessageHandler<AuthHeaderHandler>();
         }

@@ -14,8 +14,7 @@ using OpenCMS.Web.Application.Interfaces;
 using OpenCMS.Web.Application.Services;
 using Syncfusion.Blazor;
 using MudBlazor.Services;
-using OpenCMS.ApiClient;
-using OpenCMS.ApiClient.Interfaces;
+using OpenCMS.Web.Application.ApiClients;
 
 namespace OpenCMS.Web.PWA
 {
@@ -26,19 +25,13 @@ namespace OpenCMS.Web.PWA
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NTM2NzQ4QDMxMzkyZTMzMmUzMGdhUGVUOFFtWngraWt5alkrdlExM1N6alFYMFpIUWIyVlZlajVYSUhrU2M9");
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
-            builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
-            builder.Services.AddScoped<ILocalStorageService, LocalStorageService>();
-            builder.Services.AddScoped<IUserService, UserService>();
-            builder.Services.AddScoped<IAgentsService, AgentsService>();
-            builder.Services.AddScoped<IPdfViewerService, PdfViewerService>();
-            builder.Services.AddScoped<ITransactionService, TransactionService>();
-            builder.Services.AddScoped<ITestService, TestService>();
+            builder.RegisterServices();
             builder.Services.AddTransient<IValidator<TransactionItemModel>, SalesItemsValidators>();
             builder.Services.AddTransient<IValidator<CardFilesModel>, CardFilesValidator>();
             builder.Services.AddTransient<IValidator<PaymentsModel>, TransactionMakePaymentValidator>();
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            builder.Services.AddScoped<ISfDataManagerService, SfDataManagerService>();
+     
             builder.Services.AddHttpClient("OpenCMS", c =>
             {
                 var config = builder.Configuration;

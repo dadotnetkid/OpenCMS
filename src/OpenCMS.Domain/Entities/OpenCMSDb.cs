@@ -13,6 +13,7 @@ namespace OpenCMS.Domain.Entities
         {
 
         }
+
         public DbSet<Agents> Agents { get; set; }
         public DbSet<Users> Users { get; set; }
         public DbSet<Roles> Roles { get; set; }
@@ -26,12 +27,17 @@ namespace OpenCMS.Domain.Entities
         public DbSet<CatalogSellingDetails> CatalogSellingDetails { get; set; }
         public DbSet<Tenants> Tenants { get; set; }
         public DbSet<Classifications> Classifications { get; set; }
+        public DbSet<ConfigurationManagements> ConfigurationManagements { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<ConfigurationManagements>(e =>
+            {
+                e.HasKey(x => x.Id);
+            });
             builder.Entity<Classifications>(e =>
             {
                 e.HasKey(x => x.Id);
@@ -59,7 +65,7 @@ namespace OpenCMS.Domain.Entities
             builder.Entity<Catalogs>(e =>
             {
                 e.HasKey(k => k.Id);
-                e.HasMany(x => x.CatalogBuyingDetails).WithOne(x=>x.Catalog).HasForeignKey(x => x.CatalogId);
+                e.HasMany(x => x.CatalogBuyingDetails).WithOne(x => x.Catalog).HasForeignKey(x => x.CatalogId);
                 e.HasMany(x => x.CatalogSellingDetails).WithOne(x => x.Catalog).HasForeignKey(x => x.CatalogId);
             });
             builder.Entity<Accounts>(e =>

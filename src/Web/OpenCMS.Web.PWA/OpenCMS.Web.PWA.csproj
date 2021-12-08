@@ -101,7 +101,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\OpenCMS.ApiClient\OpenCMS.ApiClient.csproj" />
     <ProjectReference Include="..\OpenCMS.Web.Application\OpenCMS.Web.Application.csproj" />
   </ItemGroup>
 

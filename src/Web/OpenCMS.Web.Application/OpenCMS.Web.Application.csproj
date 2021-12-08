@@ -6,17 +6,18 @@
 
   <ItemGroup>
     <Compile Remove="Interfaces\IAccountsService.cs" />
-    <Compile Remove="Interfaces\ICatalogsService.cs" />
     <Compile Remove="Services\AccountsService.cs" />
-    <Compile Remove="Services\CardFilesService.cs" />
-    <Compile Remove="Services\CatalogsService.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="5.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="5.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.7" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
-    <PackageReference Include="Microsoft.JSInterop" Version="5.0.7" />
+    <PackageReference Include="Microsoft.JSInterop" Version="5.0.10" />
+    <PackageReference Include="MudBlazor" Version="5.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.1" />
+    <PackageReference Include="Refit" Version="6.1.15" />
+    <PackageReference Include="Refit.HttpClientFactory" Version="6.1.15" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />
     <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
   </ItemGroup>

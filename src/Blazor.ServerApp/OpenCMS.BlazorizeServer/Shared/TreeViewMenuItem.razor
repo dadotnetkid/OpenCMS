@@ -1,0 +1,13 @@
+﻿@code {
+    [Parameter]public string href{ get; set; }
+    [Parameter]public string Label { get; set; }
+    [Parameter]public NavLinkMatch Match { get; set; }
+    [Parameter]public string CssIcon { get; set; }
+
+}
+<li class="nav-item">
+    <NavLink class="nav-link" href="@href" Match="@Match">
+        <i class="far @CssIcon nav-icon"></i>
+        <p>@Label</p>
+    </NavLink>
+</li>

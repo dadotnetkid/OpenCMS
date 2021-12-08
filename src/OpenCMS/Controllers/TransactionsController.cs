@@ -33,9 +33,9 @@ namespace OpenCMS.Controllers
             _mapper = mapper;
         }
         [HttpGet("{transactionType}/{transactionStatus}")]
-        public IActionResult Get(TransactionType transactionType, TransactionStatus transactionStatus=TransactionStatus.Quotation)
+        public IActionResult Get(TransactionType transactionType, TransactionStatus transactionStatus = TransactionStatus.Quotation)
         {
-            var model = _mapper.ProjectTo<TransactionModel>(_transactionRepo.Fetch(x => x.TransactionType == (int)transactionType && x.Status==(int) transactionStatus, includeProperties: "CardFile"));
+            var model = _mapper.ProjectTo<TransactionModel>(_transactionRepo.Fetch(x => x.TransactionType == (int)transactionType && x.Status == (int)transactionStatus, includeProperties: "CardFile"));
             return Ok(new BaseResponse<object>()
             {
                 Data = model,
@@ -104,11 +104,35 @@ namespace OpenCMS.Controllers
         public async Task<IActionResult> Delete(int transactionId)
         {
             await _transactionRepo.Delete(transactionId);
-            var model = _mapper.ProjectTo<TransactionModel>(_transactionRepo.Fetch( includeProperties: "CardFile"));
+            var model = _mapper.ProjectTo<TransactionModel>(_transactionRepo.Fetch(includeProperties: "CardFile"));
             return Ok(new BaseResponse<object>()
             {
                 Data = model,
                 HttpStatusCode = System.Net.HttpStatusCode.OK
+            });
+        }
+        [HttpPatch("move-to-order/{transactionId}")]
+        public async Task<IActionResult> MoveToOrderAsync(int transactionId)
+        {
+            var item = _transactionRepo.Find(x => x.Id == transactionId);
+            item.Status = (int)TransactionStatus.Order;
+            await _transactionRepo.Update(item);
+            return Ok(new BaseResponse<object>()
+            {
+                Data = item,
+                HttpStatusCode = System.Net.HttpStatusCode.OK
+            });
+        }
+
+        [HttpPut("make-payment")]
+        public async Task<IActionResult> MakePayment(TransactionModel transactionModel, PaymentsModel paymentsModel)
+        {
+            var item=_transactionRepo.Find(x => x.Id == transactionModel.Id);
+            await _transactionRepo.Update(item);
+            return Ok(new BaseResponse<object>()
+            {
+                Data = new { },
+                HttpStatusCode = System.Net.HttpStatusCode.OK,
             });
         }
     }

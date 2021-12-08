@@ -20,9 +20,9 @@ namespace OpenCMS.Infrastructure.Common
             services.AddHttpContextAccessor();
             services.AddScoped<ITenantService, TenantService>();
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
-
-            /*   services.AddScoped<IRepository<Agents, int>, AgentsRepo>();
-               services.AddScoped<IRepository<Users, string>, UsersRepo>();*/
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ITransactionService, TransactionService>();
             services.AddScoped<IPasswordHasher<Users>, PasswordHasher<Users>>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IUserService, UserService>();

@@ -1,0 +1,96 @@
+﻿
+@page "/chart-of-accounts"
+@using SelectEventArgs = Syncfusion.Blazor.Navigations.SelectEventArgs
+@inject IAccountsApiClient AccountApiClient
+<ContentWrapper IsLoading="false" CurrentPage="Chart of Accounts">
+    <div class="row">
+        <div class="col-lg-12">
+            <SfTab @ref="sfTabClassifications" CssClass="BlazorTab" LoadOn="ContentLoad.Init">
+                <TabEvents Selected="OnSfTabClassifcation_Selected"></TabEvents>
+                <TabItems>
+                    @foreach (var i in _classifications)
+                    {
+                        var list = new List<KeyValuePair<string, object>>() { new KeyValuePair<string, object>("ID", i.Id) }.AsEnumerable();
+                        <TabItem @key="i.Id">
+                            <ChildContent>
+                                <TabHeader @key="i.Id" Text="@i.Name"></TabHeader>
+                            </ChildContent>
+                        </TabItem>
+                    }
+                </TabItems>
+            </SfTab>
+            <SfTreeGrid DataSource="_dataSource" Height="700" IdMapping="Id" ParentIdMapping="ParentId" TreeColumnIndex="1">
+                <TreeGridColumns>
+                    <SfSpinner Visible="IsLoading" Type="SpinnerType.Bootstrap" Size="50"></SfSpinner>
+                    <TreeGridColumn HeaderText="Manage Account" Width="20">
+                        <HeaderTemplate>
+                            <SfButton IsPrimary="true" IconCss="fas fa-plus-square" OnClick="@(() => ShowAddEditDialog(new AccountsModel()))"></SfButton>
+                        </HeaderTemplate>
+                        <Template>
+                            <SfButton OnClick="@(() => ShowAddEditDialog(context as AccountsModel))" IconCss="fas fa-edit"></SfButton>
+                            <SfButton OnClick="@(() => DeleteItem(context as AccountsModel))" IconCss="fas fa-trash"></SfButton>
+                        </Template>
+                    </TreeGridColumn>
+                    <TreeGridColumn Field="AccountName" HeaderText="AccountName" Width="100">
+                        <Template>
+                            @{
+                                var account = (context as AccountsModel);
+                                if (account.IsHeader)
+                                {
+                                    <b>@account.AccountName</b>
+                                }
+                                else
+                                {
+                                    <span class="e-treecell">@account.AccountName</span>
+                                }
+                            }
+                        </Template>
+                    </TreeGridColumn>
+                    <TreeGridColumn Field="AccountNumber" HeaderText="AccountNumber" Width="100"></TreeGridColumn>
+                    <TreeGridColumn Field="OpeningBalance" HeaderText="OpeningBalance" Format="n2" Width="100"></TreeGridColumn>
+                </TreeGridColumns>
+           
+            </SfTreeGrid>
+        </div>
+    </div>
+</ContentWrapper>
+@code{
+    private List<AccountsModel> _dataSource = new();
+    private List<ClassificationModel> _classifications = new();
+    private bool IsLoading = false;
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAll();
+        var classifications = await AccountApiClient.GetAllClassification();
+
+        _classifications = classifications.Data;
+        StateHasChanged();
+    }
+    private async Task GetAll(string classificationId="")
+    {
+        var get = await AccountApiClient.GetAll(classificationId);
+        _dataSource = get.Data;
+    }
+    private void ShowAddEditDialog(AccountsModel context)
+    {
+        throw new NotImplementedException();
+    }
+
+    private void DeleteItem(AccountsModel context)
+    {
+        throw new NotImplementedException();
+    }
+
+    private SfTab sfTabClassifications;
+
+    private async Task OnSfTabClassifcation_Selected(SelectEventArgs obj)
+    {
+        IsLoading = true;
+        var classification = _classifications.FirstOrDefault(x => x.OrderBy == obj.SelectedIndex);
+        await GetAll(classification?.Id);
+        IsLoading = false;
+        StateHasChanged();
+    }
+
+
+}

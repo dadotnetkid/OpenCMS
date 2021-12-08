@@ -1,0 +1,58 @@
+﻿@inject IUserService _userService
+<SfDialog Target="#target" Width="500px" ShowCloseIcon="true" @bind-Visible="@ShowDialog">
+    <DialogTemplates>
+        <Header> Add Edit Roles</Header>
+        <Content>
+            <EditForm Model="Model" OnValidSubmit="OnValidForm">
+                <FluentValidationValidator @ref="_fluentValidationValidator" />
+                <div class="row">
+                    <div class="col-lg-7">
+                        <div class="row margin-top-10">
+                            <div class="col-lg-12">
+                                <SfTextBox CssClass="e-outline" Autocomplete="AutoComplete.Off" @bind-Value="@Model.Role" Placeholder="Role" ShowClearButton="true" FloatLabelType="FloatLabelType.Auto" />
+                                <ValidationMessage For="@(() => Model.Role)" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row" style="margin-top:5px">
+                    <div class="col-lg-12">
+                        <SfButton type="submit">
+                            <span class="fas fa-save"></span>
+                            Save
+                        </SfButton>
+                    </div>
+                </div>
+
+
+
+            </EditForm>
+        </Content>
+    </DialogTemplates>
+    <DialogEvents Closed="@DialogClose"></DialogEvents>
+    <DialogButtons>
+
+    </DialogButtons>
+</SfDialog>
+@code{
+
+    [Parameter] public RoleModel Model { get; set; } = new();
+
+    [Parameter] public bool ShowDialog { get; set; }
+    [Parameter] public  EventCallback<string> OnDialogClose { get;set; }
+    private FluentValidationValidator _fluentValidationValidator;
+
+    private async Task OnValidForm()
+    {
+        var res = await _userService.CreateRole(Model);
+        if (res.HttpStatusCode == System.Net.HttpStatusCode.OK)
+            ShowDialog = false;
+    }
+
+    private async Task DialogClose()
+    {
+        await OnDialogClose.InvokeAsync("");
+    }
+
+}

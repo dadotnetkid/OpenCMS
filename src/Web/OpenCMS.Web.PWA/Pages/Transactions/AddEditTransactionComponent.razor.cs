@@ -45,16 +45,16 @@ namespace OpenCMS.Web.PWA.Pages.Transactions
             _cardFileType = _transactionType == OpenCMS.Shared.Common.TransactionType.Sales
                 ? CardFileType.Customer
                 : CardFileType.Supplier;
-            var cardFiles = await _cardFileService.GetAll((int)_cardFileType);
+            var cardFiles = await CardFileApiClient.GetAll((int)_cardFileType);
             _cardFiles = cardFiles.Data.Items;
             if (TransactionId != null)
             {
-                var _sales = await _saleService.GetById(TransactionId.Value, _transactionType);
+                var _sales = await _transactionService.GetById(TransactionId.Value, _transactionType);
                 if (_sales is BaseResponse<TransactionModel> item)
                 {
                     _model = item.Data;
                 }
-                var _salesItems = await _saleService.GetSalesItems(TransactionId.Value);
+                var _salesItems = await _transactionService.GetSalesItems(TransactionId.Value);
                 if (_salesItems is BaseResponse<List<TransactionItemModel>> salesItems)
                 {
                     _dataSource = new ObservableCollection<TransactionItemModel>(salesItems.Data);
@@ -81,7 +81,7 @@ namespace OpenCMS.Web.PWA.Pages.Transactions
                 _dataSource.Remove(context);
                 return;
             }
-            var _salesItems = await _saleService.DeleteSalesItems(context.TransactionId ?? 0, context.Id);
+            var _salesItems = await _transactionService.DeleteSalesItems(context.TransactionId ?? 0, context.Id);
             if (_salesItems is BaseResponse<List<TransactionItemModel>> salesItems)
             {
                 _dataSource = new ObservableCollection<TransactionItemModel>(salesItems.Data);
@@ -115,7 +115,7 @@ namespace OpenCMS.Web.PWA.Pages.Transactions
         {
             _transactionType = Enum.Parse<TransactionType>(this.TransactionType, true);
             _model.TransactionType = _transactionType;
-            var res = await _saleService.CreateOrUpdate(_model, _dataSource);
+            var res = await _transactionService.CreateOrUpdate(_model, _dataSource);
             if (res.HttpStatusCode == System.Net.HttpStatusCode.OK)
             {
                 _navigationManager.NavigateTo($"transactions/{TransactionType}");

@@ -25,7 +25,7 @@ namespace OpenCMS.Application.Services
             var context = _httpContextAccessor;
             var _apiKey = context.HttpContext.Request.Headers["ApiKey"].ToString();
             if (string.IsNullOrEmpty(_apiKey))
-                return 0;
+                return 1;
             var apiKey = Encoding.UTF8.GetString(Convert.FromBase64String(_apiKey)).Split(":").ToList();
          
             var domain = context.HttpContext.Request.Headers["Domain"].ToString();
@@ -34,7 +34,7 @@ namespace OpenCMS.Application.Services
             var result = _db.Tenants.FirstOrDefault(x => x.ApiKey == key && x.ApiSecret == secret && x.Domain == domain);
             if (result != null)
                 return result.Id;
-            return 0;
+            return 1;
         }
     }
 }

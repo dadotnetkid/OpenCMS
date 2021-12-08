@@ -1,0 +1,160 @@
+﻿@page "/purchases/add-edit-purchase"
+@page "/purchases/add-edit-purchase/{saleId:int}"
+@inject NavigationManager _navigationManager
+@inject ITransactionService _transactionService
+@inject ICardFilesService _cardFileService
+<ContentWrapper CurrentPage="@_currentPage">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <EditForm Model="_model" OnValidSubmit="OnValidSubmit">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <SfComboBox CssClass="e-outline" FloatLabelType="FloatLabelType.Auto" TValue="int?" TItem="CardFilesModel"
+                                                    PopupHeight="230px" Placeholder="Select a customer" @bind-Value="@_model.CardFileId"
+                                                    DataSource="@_cardFiles"
+                                                    Readonly="@(SaleId!=null)">
+                                            <ComboBoxFieldSettings Text="FullName" Value="Id"></ComboBoxFieldSettings>
+                                        </SfComboBox>
+
+                                    </div>
+                                </div>
+                                <div class="row margin-top-10">
+                                    <div class="col-12">
+                                        <SfNumericTextBox ShowSpinButton="false" Placeholder="Total Amount of PQ" CssClass="e-outline" FloatLabelType="FloatLabelType.Auto" TValue="decimal?" Readonly="true" @bind-Value="_model.TotalAmount">
+
+                                        </SfNumericTextBox>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-8">
+                                <SfProgressButton Content="Save" CssClass="float-right" IsPrimary="true" IconCss="fa fa-save">
+                                    <ProgressButtonSpinSettings Position="SpinPosition.Left"></ProgressButtonSpinSettings>
+                                </SfProgressButton>
+                            </div>
+                        </div>
+                    </EditForm>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <SfGrid DataSource="_dataSource" AllowPaging="true" AllowFiltering="true">
+                                <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
+                                <GridPageSettings PageSizes="true" PageSize="10"></GridPageSettings>
+                                <GridColumns>
+                                    <GridColumn HeaderText="Manage Records" Width="150">
+                                        <HeaderTemplate>
+                                            <SfButton IsPrimary="true" IconCss="fas fa-plus-square" OnClick="@(() => ShowAddEditDialog(new TransactionItemModel() {IsNew = true}))"></SfButton>
+                                        </HeaderTemplate>
+                                        <Template>
+                                            <SfButton OnClick="@(() => ShowAddEditDialog(context as TransactionItemModel))" IconCss="fas fa-edit"></SfButton>
+                                            <SfButton OnClick="@(() => DeleteItem(context as TransactionItemModel))" IconCss="fas fa-trash"></SfButton>
+                                        </Template>
+                                    </GridColumn>
+
+                                    <GridColumn Field="Catalogs.Name" HeaderText="Catalog Name"></GridColumn>
+                                    <GridColumn Field="Quantity" HeaderText="Quantity" Format="n2"></GridColumn>
+                                    <GridColumn Field="SubTotal" HeaderText="Sub Total" Format="n2"></GridColumn>
+
+                                </GridColumns>
+                            </SfGrid>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <AddEditPurchaseItemComponent ShowDialog="_showDialog" OnDialogClose="onDialogClose" Model="_salesItemModel" OnSave="OnSaleItemSave"></AddEditPurchaseItemComponent>
+</ContentWrapper>
+@code {
+    [Parameter] public int? SaleId { get; set; }
+    private bool _showDialog;
+    private ObservableCollection<TransactionItemModel> _dataSource = new();
+    private TransactionModel _model = new();
+    private TransactionItemModel _salesItemModel { get; set; } = new();
+    private List<CardFilesModel> _cardFiles = new();
+    private string _currentPage;
+    protected override async Task OnInitializedAsync()
+    {
+        var cardFiles = await _cardFileService.GetAll(CardFileType.Supplier);
+        _cardFiles = cardFiles.Data.Items;
+        if (SaleId != null)
+        {
+            var _sales = await _transactionService.GetById(SaleId.Value, transactionType: TransactionType.Purchases);
+            if (_sales is BaseResponse<TransactionModel> item)
+            {
+                _model = item.Data;
+            }
+            var _salesItems = await _transactionService.GetSalesItems(SaleId.Value);
+            if (_salesItems is BaseResponse<List<TransactionItemModel>> salesItems)
+            {
+                _dataSource = new ObservableCollection<TransactionItemModel>(salesItems.Data);
+            }
+
+        }
+        _currentPage = SaleId == null ? "New Purchase" : _model.CardFile.FullName;
+        StateHasChanged();
+    }
+    protected override void OnAfterRender(bool firstRender)
+    {
+
+    }
+
+    private void ShowAddEditDialog(TransactionItemModel item)
+    {
+        _salesItemModel = item;
+        _showDialog = true;
+    }
+
+    private async Task DeleteItem(TransactionItemModel context)
+    {
+        if (context.Id == 0)
+        {
+            _dataSource.Remove(context);
+            return;
+        }
+        var _salesItems = await _transactionService.DeleteSalesItems(context.TransactionId ?? 0, context.Id);
+        if (_salesItems is BaseResponse<List<TransactionItemModel>> salesItems)
+        {
+            _dataSource = new ObservableCollection<TransactionItemModel>(salesItems.Data);
+        }
+    }
+    private void onDialogClose()
+    {
+        _showDialog = false;
+
+    }
+    private void OnSaleItemSave(TransactionItemModel model)
+    {
+        if (model.IsNew)
+        {
+            _dataSource.Remove(model);
+            _dataSource.Add(model);
+        }
+        else
+        {
+            _dataSource.Remove(model);
+            model.IsModified = true;
+            _dataSource.Add(model);
+        }
+        _model.TotalAmount = _dataSource.Sum(x => x.SubTotal);
+        _showDialog = false;
+        StateHasChanged();
+    }
+
+    private async Task OnValidSubmit()
+    {
+        _model.TransactionType = TransactionType .Purchases;
+        var res = await _transactionService.CreateOrUpdate(_model, _dataSource);
+        if (res.HttpStatusCode == System.Net.HttpStatusCode.OK)
+        {
+            _navigationManager.NavigateTo("purchases");
+        }
+    }
+
+}
+

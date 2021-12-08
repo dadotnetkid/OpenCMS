@@ -10,8 +10,6 @@ namespace OpenCMS.Web.Application.Interfaces
 {
     public interface ICatalogsService
     {
-        public Task<PaginatedBaseItems<List<CatalogModel>>> GetAll();
-        Task CreateOrUpdate(CatalogModel model);
         Task Delete(int contextId);
     }
 }
